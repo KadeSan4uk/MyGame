@@ -18,7 +18,6 @@ namespace MyGame
                 // a)
                 Console.WriteLine($"Состояние игрока :{(fightState? "в бою":"в покое")}");
 
-
                 // б)
                 Console.WriteLine($"Возможные действие:");
                 Console.WriteLine($"1=бить");
@@ -101,9 +100,7 @@ namespace MyGame
                         }
                         break;
                 }
-            }
-            
-
+            }           
         }
     }
 }
