@@ -4,47 +4,105 @@ namespace MyGame
 {
     public class StartGame
     {
+        private static Random random = new Random();
+
         public static void Main(string[] args)
         {
-            string name;
-            string race;
-            
-            Console.WriteLine("Привет!");
-            Console.WriteLine("Введи имя персонажа");
-            name = Console.ReadLine();
-            
-            Console.WriteLine("Выбери рассу:\n1: Human 2: Orc");
-            int flagPlayerClass = Convert.ToInt32(Console.ReadLine());
-            while(flagPlayerClass != 1||flagPlayerClass!=2) 
+            bool fightState=false;
+            bool enemy=false;
+
+            while (true)
             {
-                if (flagPlayerClass == 1)
-                {
-                  
-                    Console.WriteLine("Отлично ты выбрал Human!");
-                    break;
-                }
-                else if (flagPlayerClass == 2)
-                {
-                   
-                    Console.WriteLine("Отлично ты выбрал Orc!");
-                    break;
+                Console.Clear();
+                fightState = enemy is true;
+                // a)
+                Console.WriteLine($"Состояние игрока :{(fightState? "в бою":"в покое")}");
 
-                }
-                else
-                {
-                    Console.WriteLine("Попробуй еще...");
-                    Console.WriteLine("Выбери рассу:\n1: Human 2: Orc");
-                    flagPlayerClass = Convert.ToInt32(Console.ReadLine());
-                }
 
+                // б)
+                Console.WriteLine($"Возможные действие:");
+                Console.WriteLine($"1=бить");
+                Console.WriteLine($"2=бежать");
+                Console.WriteLine($"3=искать врага");
+                Console.Write($"Выбери действие:");
+                string action=Console.ReadLine();
+
+                //в)
+                switch (action)
+                {
+                    case "1":
+                        if (enemy)
+                        {
+                            int chance = random.Next(0, 100);
+
+                            if (chance > 10)
+                            {
+                                Console.WriteLine($"враг повержен");
+                                enemy = false;
+                            }
+                            else
+                            {
+                                Console.WriteLine($"промах");
+                            }
+                        }
+                        else 
+                        {
+                            Console.WriteLine($"враг отсутсвует, ищем врага");
+                            int chance = random.Next(0, 100);
+
+                            if (chance > 50)
+                            {
+                                Console.WriteLine($"враг найден");
+                                enemy = true;
+                            }
+                            else
+                            {
+                                Console.WriteLine($"неудачный поиск врага");
+                            }
+                        }
+                        break;
+                    case "2":
+                        if (enemy)
+                        {
+                            int chance = random.Next( 0, 100);
+                            if (chance > 10)
+                            {
+                                Console.WriteLine($"убежал от врага");
+                                enemy = false;
+                            }
+                            else
+                            {
+                                Console.WriteLine($"побег неудался");                                                               
+                            }                           
+                        }
+                        else
+                        {
+                            Console.WriteLine($"врага не найден");
+                        }
+                        break;
+                    case "3":
+                        if (enemy)
+                        {
+                            Console.WriteLine($"враг уже есть");
+                        }
+                        else
+                        {
+                            int chance = random.Next(0, 100);
+
+                            if (chance > 50)
+                            {
+                                Console.WriteLine($"враг найден");
+                                enemy = true;
+                            }
+                            else
+                            {
+                                Console.WriteLine($"неудачный поиск врага");
+                            }
+                        }
+                        break;
+                }
             }
             
-
-
-
-
-
-
 
         }
     }
