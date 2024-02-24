@@ -8,21 +8,33 @@ namespace MyGame
 
         public static void Main(string[] args)
         {
+            int playerHealth = 3;            
             bool fightState=false;
             bool enemy=false;
+            int counterAction = 0;
+            bool enemyFresh=false;
 
             while (true)
             {
-                Console.Clear();
+                Console.WriteLine();
+                Console.WriteLine($"<=== ход {counterAction} ===>");
+                
                 fightState = enemy is true;
+
+                if(enemy)
+                    enemyFresh = false;
+
                 // a)
-                Console.WriteLine($"Состояние игрока :{(fightState? "в бою":"в покое")}");
+                Console.WriteLine($"Состояние игрока :{(fightState? "в бою":"в покое")}, жизни {playerHealth}");
 
                 // б)
                 Console.WriteLine($"Возможные действие:");
                 Console.WriteLine($"1=бить");
                 Console.WriteLine($"2=бежать");
-                Console.WriteLine($"3=искать врага");
+
+                if(!enemy)
+                    Console.WriteLine($"3=искать врага");
+
                 Console.Write($"Выбери действие:");
                 string action=Console.ReadLine();
 
@@ -53,6 +65,7 @@ namespace MyGame
                             {
                                 Console.WriteLine($"враг найден");
                                 enemy = true;
+                                enemyFresh = true;
                             }
                             else
                             {
@@ -82,7 +95,8 @@ namespace MyGame
                     case "3":
                         if (enemy)
                         {
-                            Console.WriteLine($"враг уже есть");
+                            Console.WriteLine($"враг уже есть, повторите действие");
+                            continue;
                         }
                         else
                         {
@@ -92,6 +106,7 @@ namespace MyGame
                             {
                                 Console.WriteLine($"враг найден");
                                 enemy = true;
+                                enemyFresh = true;
                             }
                             else
                             {
@@ -100,6 +115,38 @@ namespace MyGame
                         }
                         break;
                 }
+
+                //д)
+                if (enemy && enemyFresh==false)
+                {
+                    Console.WriteLine($"враг нанес удар");
+                    playerHealth -= 1;
+                    if (playerHealth == 0)
+                    {
+                        Console.WriteLine($"душа покидает тело героя");
+                        Console.WriteLine($"Game Over!");
+                        break;
+                    }
+                }
+
+                //г)
+                if (!enemy)
+                {                    
+                    int chance = random.Next(0, 100);
+
+                    if (chance > 80)
+                    {
+                        Console.WriteLine($"в дверях вашей лочуги появился враг!");
+                        enemy = true;
+                    }
+                    else
+                    {
+                        Console.WriteLine($"в мире ничего не произошло");
+                    }              
+                }
+
+               
+                counterAction++;          
             }           
         }
     }
