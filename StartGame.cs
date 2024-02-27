@@ -22,12 +22,12 @@ namespace MyGame
             bool fightState=false;
             bool enemy=false;
             int counterAction = 1;
-            bool enemyFresh=false;
+            bool enemyFresh = false;
 
             while (true)
             {               
                 Console.WriteLine();
-                Console.WriteLine($"  <=== ход {counterAction} ===>");                
+                Console.WriteLine($" \t\t <=== ход {counterAction} ===>");                
                                 
                 fightState = enemy is true;
 
@@ -47,11 +47,11 @@ namespace MyGame
                     {
                         Console.WriteLine($" В мире ничего не произошло");
                     }                    
-                }               
+                }
                 // a)
-                Console.WriteLine($" Состояние игрока: {(fightState? "в бою  ":"в покое")} || Уровень героя {playerLevel}\n" +
-                    $"\t\t\t   || Жизни героя {playerHealth}");
-                Console.WriteLine();
+                Console.WriteLine($" Состояние героя: {(fightState ? "в бою  " : "в покое")}"); 
+                Console.WriteLine($"\t\t\t   || Уровень героя {playerLevel}\n" +
+                    $"\t\t\t   || Жизни героя {playerHealth}\n");
 
                 if (enemy)
                 {
@@ -72,7 +72,8 @@ namespace MyGame
                 }
                 //в)
                 Console.Write($" Выбрать действие:");
-                string action = Console.ReadLine();
+                string action = Console.ReadLine();              
+                
                 switch (action)
                 {
                     case "1":
@@ -80,14 +81,15 @@ namespace MyGame
                         {
                             int chance = random.Next(0, 100);
 
-                            if (chance > 5)
-                            {                                
-                                if(enemyHealth>1)
+                            if (chance > 20)
+                            {
+                                enemyHealth -= playerDamage;
+                                if (enemyHealth>0)
                                 {
                                     Console.WriteLine($" \t\t\t   |=> Герой нанес {playerDamage} урона");
-                                    enemyHealth -= playerDamage;
+                                    
                                 }                             
-                                else if(enemyHealth <=1)
+                                else 
                                 {
                                     Console.WriteLine($" \t\t\t   |=> Герой нанес сокрушительный удар");
                                     Console.WriteLine($"\t\t\t    < Враг повержен! >");
@@ -109,31 +111,15 @@ namespace MyGame
                             }
                             else
                             {
-                                Console.WriteLine($" Промах");                                
+                                Console.WriteLine($"Герой промахнулся");                                
                             }
-                        }
-                        else
-                        {
-                            Console.WriteLine($" Враг отсутсвует, ищем врага");
-                            int chance = random.Next(0, 100);
-
-                            if (chance > 20)
-                            {
-                                Console.WriteLine($" Враг найден!");
-                                enemy = true;
-                                enemyFresh = true;
-                            }
-                            else
-                            {
-                                Console.WriteLine($" Неудачный поиск врага");
-                            }
-                        }
+                        }                        
                         break;
                     case "2":
                         if (enemy)
                         {
                             int chance = random.Next(0, 100);
-                            if (chance > 10)
+                            if (chance > 20)
                             {
                                 Console.WriteLine($" Герой сбежал от врага");
                                 enemy = false;
@@ -142,11 +128,7 @@ namespace MyGame
                             {
                                 Console.WriteLine($" Побег неудался");
                             }
-                        }
-                        else
-                        {
-                            Console.WriteLine($" Врага не найден");
-                        }
+                        }                       
                         break;
                     case "3":
                         if (enemy)
@@ -176,8 +158,16 @@ namespace MyGame
                 {
                     if (enemyHealth > 0)
                     {
-                        Console.WriteLine($"\t\t\t   |=> Враг нанес {enemyDamage} урона");
-                        playerHealth -= 1;
+                        int chance=random.Next(0, 100);
+                        if (chance > 20)
+                        {
+                            Console.WriteLine($"\t\t\t   |=> Враг нанес {enemyDamage} урона");
+                            playerHealth -= 1;
+                        }
+                        else
+                        {
+                            Console.WriteLine($"\t\t\t   |=> Герой увернулся");
+                        }
                     }
                     
                     if (playerHealth <= 0)
