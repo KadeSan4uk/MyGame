@@ -87,8 +87,7 @@ namespace MyGame
                                 enemyHealth -= playerDamage;
                                 if (enemyHealth>0)
                                 {
-                                    Console.WriteLine($" \t\t\t   |=> Герой нанес {playerDamage} урона");
-                                    
+                                    Console.WriteLine($" \t\t\t   |=> Герой нанес {playerDamage} урона");                                    
                                 }                             
                                 else 
                                 {
@@ -111,8 +110,7 @@ namespace MyGame
                             }
                             else
                             {
-                            Console.WriteLine($"\t\t\t   |=> Герой промахнулся");
-
+                               Console.WriteLine($"\t\t\t   |=> Герой промахнулся");
                             }
                         }                        
                         break;
