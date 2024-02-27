@@ -32,7 +32,7 @@ namespace MyGame
                 fightState = enemy is true;
 
                 if (enemy)                
-                    enemyFresh = false;
+                    enemyFresh = false;                           
                 //г)
                 if (!enemy)
                 {
@@ -42,6 +42,7 @@ namespace MyGame
                     {
                         Console.WriteLine($" В дверях вашей лочуги появился враг!");
                         enemy = true;
+                        enemyHealth = 3;
                     }
                     else
                     {
@@ -98,20 +99,20 @@ namespace MyGame
                                     countExpereince++;
                                     if (countExpereince > 2)
                                     {
-                                        playerLevel += 1;
+                                        playerLevel ++;
                                         Console.WriteLine($"\t\t\t Герой достиг {playerLevel} уровня! ");
                                         playerDamage++;
                                         countPlayerHelth++;
                                         countExpereince = 0;
                                     }
-                                    enemy = false;
-                                    enemyHealth = 3;
+                                    enemy = false;                                    
                                     playerHealth = countPlayerHelth;
                                 }
                             }
                             else
                             {
-                                Console.WriteLine($"Герой промахнулся");                                
+                            Console.WriteLine($"\t\t\t   |=> Герой промахнулся");
+
                             }
                         }                        
                         break;
@@ -142,13 +143,14 @@ namespace MyGame
 
                             if (chance > 20)
                             {
-                                Console.WriteLine($" Результат поиска: Враг найден!");
+                                Console.WriteLine($" Результат поиска:\t   |=> Враг найден!");
+                                enemyHealth = 3;
                                 enemy = true;
                                 enemyFresh = true;
                             }
                             else
                             {
-                                Console.WriteLine($" Результат поиска: Враг не найден");
+                                Console.WriteLine($" Результат поиска: \t   |=> Поиск врага");
                             }
                         }
                         break;
