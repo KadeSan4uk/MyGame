@@ -7,22 +7,45 @@ namespace MyGame
     {
         private static Random random = new Random();
 
+        static void WorldTurn()
+        {
+
+        }
+
+        static void Status() 
+        {
+
+        }
+
+        static void PerformPlayerAction()
+        {
+
+        }
+
+        static void PerformEnemyAction()
+        {
+
+        }
+        
+        
+        private static int countPlayerHelth = 4;
+        private static int countExpereince = 0;
+        private static int globalExperience = 1;
+        private static int playerLevel = 1;
+        private static int playerExperience = 0;
+        private static int playerHealth = countPlayerHelth;
+        private static int playerDamage = 1;
+        private static int enemyLevel = 1;
+        private static int enemyHealth = 3;
+        private static int enemyDamage = 1;
+        private static bool fightState = false;
+        private static bool enemy = false;        
+        private static bool enemyFresh = false;
+        private static int counterAction = 1;
+
         public static void Main(string[] args)
         {
-            int countPlayerHelth = 4;
-            int countExpereince = 0;
-            int globalExperience = 1;
-            int playerLevel = 1;
-            int playerExperience=0; 
-            int playerHealth = countPlayerHelth;            
-            int playerDamage = 1;
-            int enemyLevel = 1;
-            int enemyHealth = 3;
-            int enemyDamage = 1;
-            bool fightState=false;
-            bool enemy=false;
-            int counterAction = 1;
-            bool enemyFresh = false;
+            
 
             while (true)
             {               
