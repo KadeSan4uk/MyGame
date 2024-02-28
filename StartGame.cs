@@ -9,7 +9,7 @@ namespace MyGame
 
         static void WorldTurn()
         {
-
+           
         }
 
         static void Status() 
@@ -19,6 +19,7 @@ namespace MyGame
 
         static void PerformPlayerAction()
         {
+            
 
         }
 
@@ -28,12 +29,12 @@ namespace MyGame
         }
         
         
-        private static int countPlayerHelth = 4;
+        private static int countPlayerHealth = 4;
         private static int countExpereince = 0;
         private static int globalExperience = 1;
         private static int playerLevel = 1;
         private static int playerExperience = 0;
-        private static int playerHealth = countPlayerHelth;
+        private static int playerHealth = countPlayerHealth;
         private static int playerDamage = 1;
         private static int enemyLevel = 1;
         private static int enemyHealth = 3;
@@ -44,19 +45,17 @@ namespace MyGame
         private static int counterAction = 1;
 
         public static void Main(string[] args)
-        {
-            
-
+        {           
             while (true)
-            {               
+            {
                 Console.WriteLine();
-                Console.WriteLine($" \t\t <=== ход {counterAction} ===>");                
-                                
+                Console.WriteLine($" \t\t <=== ход {counterAction} ===>");
+
                 fightState = enemy is true;
 
-                if (enemy)                
-                    enemyFresh = false;                           
-                //г)
+                if (enemy)
+                    enemyFresh = false;
+
                 if (!enemy)
                 {
                     int chance = random.Next(0, 100);
@@ -70,10 +69,10 @@ namespace MyGame
                     else
                     {
                         Console.WriteLine($" В мире ничего не произошло");
-                    }                    
+                    }
                 }
-                // a)
-                Console.WriteLine($" Состояние героя: {(fightState ? "в бою  " : "в покое")}"); 
+
+                Console.WriteLine($" Состояние героя: {(fightState ? "в бою  " : "в покое")}");
                 Console.WriteLine($"\t\t\t   || Уровень героя {playerLevel}\n" +
                     $"\t\t\t   || Жизни героя {playerHealth}\n");
 
@@ -82,8 +81,8 @@ namespace MyGame
                     Console.WriteLine($"\t\t\t   || Уровень врага {enemyLevel}");
                     Console.WriteLine($"\t\t\t   || Жизни врага {enemyHealth}");
                 }
-                // б)
-                if (!enemy) 
+
+                if (!enemy)
                 {
                     Console.WriteLine($" Возможные действие:");
                     Console.WriteLine($" 3) = искать врага");
@@ -94,10 +93,10 @@ namespace MyGame
                     Console.WriteLine($" 1) = атаковать");
                     Console.WriteLine($" 2) = сбежать");
                 }
-                //в)
+
                 Console.Write($" Выбрать действие:");
-                string action = Console.ReadLine();              
-                
+                string action = Console.ReadLine();
+
                 switch (action)
                 {
                     case "1":
@@ -108,11 +107,11 @@ namespace MyGame
                             if (chance > 20)
                             {
                                 enemyHealth -= playerDamage;
-                                if (enemyHealth>0)
+                                if (enemyHealth > 0)
                                 {
-                                    Console.WriteLine($" \t\t\t   |=> Герой нанес {playerDamage} урона");                                    
-                                }                             
-                                else 
+                                    Console.WriteLine($" \t\t\t   |=> Герой нанес {playerDamage} урона");
+                                }
+                                else
                                 {
                                     Console.WriteLine($" \t\t\t   |=> Герой нанес сокрушительный удар");
                                     Console.WriteLine($"\t\t\t    < Враг повержен! >");
@@ -121,21 +120,21 @@ namespace MyGame
                                     countExpereince++;
                                     if (countExpereince > 2)
                                     {
-                                        playerLevel ++;
+                                        playerLevel++;
                                         Console.WriteLine($"\t\t\t Герой достиг {playerLevel} уровня! ");
                                         playerDamage++;
-                                        countPlayerHelth++;
+                                        countPlayerHealth++;
                                         countExpereince = 0;
                                     }
-                                    enemy = false;                                    
-                                    playerHealth = countPlayerHelth;
+                                    enemy = false;
+                                    playerHealth = countPlayerHealth;
                                 }
                             }
                             else
                             {
-                               Console.WriteLine($"\t\t\t   |=> Герой промахнулся");
+                                Console.WriteLine($"\t\t\t   |=> Герой промахнулся");
                             }
-                        }                        
+                        }
                         break;
                     case "2":
                         if (enemy)
@@ -150,7 +149,7 @@ namespace MyGame
                             {
                                 Console.WriteLine($" Побег неудался");
                             }
-                        }                       
+                        }
                         break;
                     case "3":
                         if (enemy)
@@ -176,12 +175,12 @@ namespace MyGame
                         }
                         break;
                 }
-                //д)
-                if (enemy && enemyFresh==false)
+
+                if (enemy && enemyFresh == false)
                 {
                     if (enemyHealth > 0)
                     {
-                        int chance=random.Next(0, 100);
+                        int chance = random.Next(0, 100);
                         if (chance > 20)
                         {
                             Console.WriteLine($"\t\t\t   |=> Враг нанес {enemyDamage} урона");
@@ -192,38 +191,40 @@ namespace MyGame
                             Console.WriteLine($"\t\t\t   |=> Герой увернулся");
                         }
                     }
-                    
+
                     if (playerHealth <= 0)
                     {
                         Console.Clear();
-                        Console.WriteLine($" Герой погиб!\t|| Начать заново?");                     
+                        Console.WriteLine($" Герой погиб!\t|| Начать заново?");
                         Console.WriteLine($" Возможные действия:");
                         Console.WriteLine($" 1) = Начать заново");
                         Console.WriteLine($" 2) = Покинуть игру");
 
-                        string actionEsc=Console.ReadLine();
+                        string actionEsc = Console.ReadLine();
 
                         switch (actionEsc)
                         {
-                            case "1": counterAction = 1;
+                            case "1":
+                                counterAction = 1;
                                 Console.Clear();
-                                playerHealth = countPlayerHelth;
+                                playerHealth = countPlayerHealth;
                                 enemyHealth = 3;
-                                countPlayerHelth = 4;
+                                countPlayerHealth = 4;
                                 playerExperience = 0;
-                                enemy = false;                                
+                                enemy = false;
                                 continue;
 
-                            case "2": Console.WriteLine($" Выход из игры");                                      
+                            case "2":
+                                Console.WriteLine($" Выход из игры");
                                 return;
 
-                            default:                                
-                                    Console.WriteLine($" Выход из игры");                                    
-                                return;                              
-                        }                        
+                            default:
+                                Console.WriteLine($" Выход из игры");
+                                return;
+                        }
                     }
-                }                
-                counterAction++;                
+                }
+                counterAction++;
             }           
         }
     }
