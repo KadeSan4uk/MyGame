@@ -1,7 +1,4 @@
-﻿using System.Data;
-using System.Threading.Channels;
-
-namespace MyGame
+﻿namespace MyGame
 {
 	public class StartGame
 	{
