@@ -6,28 +6,7 @@ namespace MyGame
     public class StartGame
     {
         private static Random random = new Random();
-
-        static void WorldTurn()
-        {
-           
-        }
-
-        static void Status() 
-        {
-
-        }
-
-        static void PerformPlayerAction()
-        {
-            
-
-        }
-
-        static void PerformEnemyAction()
-        {
-
-        }
-        
+              
         
         private static int countPlayerHealth = 4;
         private static int countExpereince = 0;
@@ -43,36 +22,27 @@ namespace MyGame
         private static bool enemy = false;        
         private static bool enemyFresh = false;
         private static int counterAction = 1;
+        private static bool isEnemyOn = false;
+        private static bool isEnemySearch = false;
 
         public static void Main(string[] args)
         {           
             while (true)
             {
-                Console.WriteLine();
-                Console.WriteLine($" \t\t <=== ход {counterAction} ===>");
+                WorldTurn();
 
-                fightState = enemy is true;
-
-                if (enemy)
-                    enemyFresh = false;
-
-                if (!enemy)
-                {
-                    int chance = random.Next(0, 100);
-
-                    if (chance > 80)
-                    {
-                        Console.WriteLine($" В дверях вашей лочуги появился враг!");
-                        enemy = true;
-                        enemyHealth = 3;
-                    }
-                    else
-                    {
-                        Console.WriteLine($" В мире ничего не произошло");
-                    }
-                }
+               
 
                 Console.WriteLine($" Состояние героя: {(fightState ? "в бою  " : "в покое")}");
+                if( isEnemyOn ) 
+                {
+                    Console.WriteLine($" Результат поиска:\t   |=> Враг найден!");
+                }
+                if( isEnemySearch )
+                {
+                    Console.WriteLine($" Результат поиска: \t   |=> Поиск врага");
+                }
+
                 Console.WriteLine($"\t\t\t   || Уровень героя {playerLevel}\n" +
                     $"\t\t\t   || Жизни героя {playerHealth}\n");
 
@@ -163,6 +133,7 @@ namespace MyGame
 
                             if (chance > 20)
                             {
+                                isEnemyOn = true;
                                 Console.WriteLine($" Результат поиска:\t   |=> Враг найден!");
                                 enemyHealth = 3;
                                 enemy = true;
@@ -171,6 +142,7 @@ namespace MyGame
                             else
                             {
                                 Console.WriteLine($" Результат поиска: \t   |=> Поиск врага");
+                                isEnemySearch= true;
                             }
                         }
                         break;
@@ -226,6 +198,47 @@ namespace MyGame
                 }
                 counterAction++;
             }           
+        }
+        static void WorldTurn()
+        {
+            Console.WriteLine();
+            Console.WriteLine($" \t\t <=== ход {counterAction} ===>");
+
+            fightState = enemy is true;
+            if (enemy)
+                enemyFresh = false;
+
+            if (!enemy)
+            {
+                int chance = random.Next(0, 100);
+
+                if (chance > 80)
+                {
+                    Console.WriteLine($" В дверях вашей лочуги появился враг!");
+                    enemy = true;
+                    enemyHealth = 3;
+                }
+                else
+                {
+                    Console.WriteLine($" В мире ничего не произошло");
+                }
+            }
+        }
+
+        static void Status()
+        {
+
+        }
+
+        static void PerformPlayerAction()
+        {
+
+
+        }
+
+        static void PerformEnemyAction()
+        {
+
         }
     }
 }
