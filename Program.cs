@@ -3,7 +3,7 @@ using System.Threading.Channels;
 
 namespace MyGame
 {
-    public class StartGame
+    public class Program
     {
         private static Random random = new Random();
 
