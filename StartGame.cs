@@ -25,6 +25,7 @@ namespace MyGame
         private static bool isEnemyAttack=false;
         private static bool isEnemyOn = false;
         private static bool isEnemySearch = false;
+        private static bool isEnemyDied = false;
 
         private static int counterAction = 1;
         private static bool Exit=false;
@@ -72,12 +73,13 @@ namespace MyGame
 
         static void Status()
         {
-            Console.WriteLine($" Состояние героя: {(fightState ? "в бою  " : "в покое")}");
+            Console.WriteLine($" Состояние героя: {(fightState ? "в бою\n  " : "в покое\n")}");
             if (isEnemyOn)
             {
                 Console.WriteLine($" Результат поиска:\t   |=> Враг найден!\n");
                 isEnemyOn = false;
                 isEnemySearch=false;
+                isEnemyAttack = false;
             }
             if (isEnemySearch)
             {
@@ -87,10 +89,16 @@ namespace MyGame
             Console.WriteLine($"{(isHeroAttack? $"|=> Герой нанес {playerDamage}  урона" :"\t\t\t")} " +
                 $"  || Уровень героя {playerLevel}\n" +
                 $"\t\t\t   || Жизни героя {playerHealth}\n");
+            if (isEnemyDied)
+            {
+                Console.WriteLine($"\t\t\t   < Враг повержен! >");
+                isEnemyDied = false;
+            }
 
             if (fightState)
             {
-                Console.WriteLine($"\t\t\t   || Уровень врага {enemyLevel}");
+                Console.WriteLine($"{(isEnemyAttack? $"|=> Враг нанес {enemyDamage} урона  " : "\t\t\t")}" +
+                    $"   || Уровень врага {enemyLevel}");
                 Console.WriteLine($"\t\t\t   || Жизни врага {enemyHealth}");
             }            
         }
@@ -131,6 +139,7 @@ namespace MyGame
                             {
                                 Console.WriteLine($" \t\t\t   |=> Герой нанес сокрушительный удар");
                                 Console.WriteLine($"\t\t\t    < Враг повержен! >");
+                                isEnemyDied = true;
                                 Console.WriteLine($" Герой получил {globalExperience} опыта");
                                 playerExperience += globalExperience;
                                 countExpereince++;
@@ -144,6 +153,7 @@ namespace MyGame
                                 }
                                 enemy = false;
                                 playerHealth = countPlayerHealth;
+                                isHeroAttack=false;
                                 
                             }
                         }
@@ -190,6 +200,7 @@ namespace MyGame
                             enemyHealth = countEnemyHealth;
                             enemy = true;
                             enemyFresh = true;
+
                         }
                         else
                         {
@@ -207,10 +218,7 @@ namespace MyGame
         static void PerformEnemyAction()
         {
             if (enemy)
-            {
-                Console.WriteLine($"\t\t\t   || Уровень врага {enemyLevel}");
-                Console.WriteLine($"\t\t\t   || Жизни врага {enemyHealth}");
-
+            {               
                 if (enemy && enemyFresh == false)
                 {
                     if (enemyHealth > 0)
@@ -218,6 +226,7 @@ namespace MyGame
                         int chance = random.Next(0, 100);
                         if (chance > 20)
                         {
+                            isEnemyAttack = true;
                             Console.WriteLine($"\t\t\t   |=> Враг нанес {enemyDamage} урона");
                             playerHealth -= 1;
                         }
