@@ -27,11 +27,12 @@ namespace MyGame
         private static bool isEnemySearch = false;
 
         private static int counterAction = 1;
+        private static bool Exit=false;
 
         public static void Main(string[] args)
         {
             playerHealth = countPlayerHealth;
-            while (true)
+            while (!Exit)
             {
                 Console.Clear();
                 WorldTurn();
@@ -82,8 +83,9 @@ namespace MyGame
             {
                 Console.WriteLine($" Результат поиска: \t   |=> Поиск врага\n");
             }
-
-            Console.WriteLine($"\t\t\t   || Уровень героя {playerLevel}\n" +
+            
+            Console.WriteLine($"{(isHeroAttack? $"|=> Герой нанес {playerDamage}  урона" :"\t\t\t")} " +
+                $"  || Уровень героя {playerLevel}\n" +
                 $"\t\t\t   || Жизни героя {playerHealth}\n");
 
             if (fightState)
@@ -142,6 +144,7 @@ namespace MyGame
                                 }
                                 enemy = false;
                                 playerHealth = countPlayerHealth;
+                                
                             }
                         }
                         else
@@ -158,11 +161,15 @@ namespace MyGame
                         {
                             Console.WriteLine($" Герой сбежал от врага");
                             enemy = false;
+                            isHeroAttack = false;
+
                         }
                         else
                         {
                             Console.WriteLine($" Побег неудался");
                             isEnemySearch = false;
+                            isHeroAttack = false;
+
                         }
                     }
                     break;
@@ -187,7 +194,9 @@ namespace MyGame
                         else
                         {
                             isEnemySearch = true;
-                            Console.WriteLine($" Результат поиска: \t   |=> Поиск врага");                            
+                            Console.WriteLine($" Результат поиска: \t   |=> Поиск врага");
+                                isHeroAttack=false;
+
                         }
                     }
                     break;
@@ -237,15 +246,21 @@ namespace MyGame
                                 enemyHealth = countEnemyHealth;                                
                                 playerExperience = 0;
                                 enemy = false;
+                                isHeroAttack = false;
+
                                 break;
 
                             case "2":
+                                Console.Clear();
                                 Console.WriteLine($" Выход из игры");
-                                return;
+                                Exit=true;
+                                break;
 
                             default:
+                                Console.Clear();
                                 Console.WriteLine($" Выход из игры");
-                                return;
+                                Exit = true;
+                                break;
                         }
                     }
                 }
