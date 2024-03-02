@@ -1,281 +1,253 @@
-﻿using System.Data;
-using System.Threading.Channels;
+﻿using System.Text;
 
 namespace MyGame
 {
-    public class Program
-    {
-        private static Random random = new Random();
+	public class Program
+	{
+		private static Random random = new();
+		private static Queue<string> logQueue = new();
 
-        private static int countEnemyHealth = 3;
-        private static int countPlayerHealth = 4;
-        private static int countExpereince = 0;
-        private static int globalExperience = 1;
-        private static int playerLevel = 1;
-        private static int playerExperience = 0;
-        private static int playerHealth;
-        private static int playerDamage = 1;
-        private static int enemyLevel = 1;
-        private static int enemyHealth;
-        private static int enemyDamage = 1;
-        private static bool fightState = false;
-        private static bool enemy = false;        
-        private static bool enemyFresh = false;
-        private static bool isHeroAttack=false;
-        private static bool isEnemyAttack=false;
-        private static bool isEnemyOn = false;
-        private static bool isEnemySearch = false;
-        private static bool isEnemyDied = false;
+		private static int basePlayerHealth = 4;
+		private static int playerExpereince = 0;
+		private static int experienceGain = 1;
+		private static int playerLevel = 1;
+		private static int playerHealth;
+		private static int playerDamage = 1;
 
-        private static int counterAction = 1;
-        private static bool Exit=false;
+		private static Enemy? enemy = null;
+		private static bool createEnemy = false;
 
-        public static void Main(string[] args)
-        {
-            playerHealth = countPlayerHealth;
-            while (!Exit)
-            {
-                Console.Clear();
-                WorldTurn();
-                Status();
-                PerformPlayerAction();
-                PerformEnemyAction();             
-                                               
-            }           
-        }
-        static void WorldTurn()
-        {
-            Console.WriteLine();
-            Console.WriteLine($" \t\t <=== ход {counterAction++} ===>");
+		private static int currentRound = 1;
+		private static bool exit = false;
 
-            fightState = enemy is true;
-            if (enemy)
-                enemyFresh = false;
+		public static void Main(string[] args)
+		{
+			playerHealth = basePlayerHealth;
+			
+			while (!exit)
+			{
+				Console.Clear();
+				ShowLog();
+				WorldTurn();
+				Status();
+				PerformPlayerAction();
+				PerformEnemyAction();
+				currentRound++;
+			}
+		}
 
-            if (!enemy)
-            {
-                int chance = random.Next(0, 100);
+		static void WorldTurn()
+		{
+			Console.WriteLine();
+			Console.WriteLine($" \t\t <=== ход {currentRound} ===>");
 
-                if (chance > 80)
-                {
-                    Console.WriteLine($" В дверях вашей лочуги появился враг!");
-                    isEnemySearch = false;
-                    enemy = true;
-                    fightState=true;
-                    enemyHealth = countEnemyHealth;
-                }
-                else
-                {
-                    Console.WriteLine($" В мире ничего не произошло");
-                }
-            }
-        }
+			if (enemy is null)
+			{
+				int chance = random.Next(0, 100);
 
-        static void Status()
-        {
-            Console.WriteLine($" Состояние героя: {(fightState ? "в бою\n  " : "в покое\n")}");
-            if (isEnemyOn)
-            {
-                Console.WriteLine($" Результат поиска:\t   |=> Враг найден!\n");
-                isEnemyOn = false;
-                isEnemySearch=false;
-                isEnemyAttack = false;
-            }
-            if (isEnemySearch)
-            {
-                Console.WriteLine($" Результат поиска: \t   |=> Поиск врага\n");
-            }
-            
-            Console.WriteLine($"{(isHeroAttack? $"|=> Герой нанес {playerDamage}  урона" :"\t\t\t")} " +
-                $"  || Уровень героя {playerLevel}\n" +
-                $"\t\t\t   || Жизни героя {playerHealth}\n");
-            if (isEnemyDied)
-            {
-                Console.WriteLine($"\t\t\t   < Враг повержен! >");
-                isEnemyDied = false;
-            }
+				if (chance > 80)
+				{
+					enemy = new Enemy(logQueue);
+					AddLog($"{currentRound} В дверях вашей лочуги появился враг!");
+				}
+				else
+				{
+					AddLog($"{currentRound} В мире ничего не произошло");
+				}
+			}
+		}
 
-            if (fightState)
-            {
-                Console.WriteLine($"{(isEnemyAttack? $"|=> Враг нанес {enemyDamage} урона  " : "\t\t\t")}" +
-                    $"   || Уровень врага {enemyLevel}");
-                Console.WriteLine($"\t\t\t   || Жизни врага {enemyHealth}");
-            }            
-        }
+		static void Status()
+		{
+			Console.WriteLine(
+				$" Состояние героя: {(enemy is not null ? "в бою\n  " : "в покое\n")}");
 
-        static void PerformPlayerAction()
-        {
-            if (!enemy)
-            {
-                Console.WriteLine($" Возможные действие:");
-                Console.WriteLine($" 3) = искать врага");
-            }
-            else
-            {
-                Console.WriteLine($" Возможные действие:");
-                Console.WriteLine($" 1) = атаковать");
-                Console.WriteLine($" 2) = сбежать");
-            }
+			Console.WriteLine($"Hero Level:\t {playerLevel}");
+			Console.WriteLine($"Hero HP:\t {playerHealth}");
 
-            Console.Write($" Выбрать действие:");
-            string action = Console.ReadLine();
+			if (enemy is not null)
+			{
+				Console.WriteLine($"Enemy Level:\t {enemy.Level}");
+				Console.WriteLine($"Enemy HP:\t {enemy.Health}");
+			}
+		}
 
-            switch (action)
-            {
-                case "1":
-                    if (enemy)
-                    {
-                        int chance = random.Next(0, 100);
+		static void PerformPlayerAction()
+		{
+			Console.WriteLine();
+			
+			if (enemy is null)
+			{
+				Console.WriteLine($" Возможное действие:");
+				Console.WriteLine($" 3) = искать врага");
+			}
+			else
+			{
+				Console.WriteLine($" Возможные действия:");
+				Console.WriteLine($" 1) = атаковать");
+				Console.WriteLine($" 2) = сбежать");
+			}
 
-                        if (chance > 20)
-                        {
-                            enemyHealth -= playerDamage;
-                            if (enemyHealth > 0)
-                            {
-                                Console.WriteLine($" \t\t\t   |=> Герой нанес {playerDamage} урона");
-                                isHeroAttack = true;
-                            }
-                            else
-                            {
-                                Console.WriteLine($" \t\t\t   |=> Герой нанес сокрушительный удар");
-                                Console.WriteLine($"\t\t\t    < Враг повержен! >");
-                                isEnemyDied = true;
-                                Console.WriteLine($" Герой получил {globalExperience} опыта");
-                                playerExperience += globalExperience;
-                                countExpereince++;
-                                if (countExpereince > 2)
-                                {
-                                    playerLevel++;
-                                    Console.WriteLine($"\t\t\t Герой достиг {playerLevel} уровня! ");
-                                    playerDamage++;
-                                    countPlayerHealth++;
-                                    countExpereince = 0;
-                                }
-                                enemy = false;
-                                playerHealth = countPlayerHealth;
-                                isHeroAttack=false;
-                                
-                            }
-                        }
-                        else
-                        {
-                            Console.WriteLine($"\t\t\t   |=> Герой промахнулся");
-                        }
-                    }
-                    break;
-                case "2":
-                    if (enemy)
-                    {
-                        int chance = random.Next(0, 100);
-                        if (chance > 20)
-                        {
-                            Console.WriteLine($" Герой сбежал от врага");
-                            enemy = false;
-                            isHeroAttack = false;
+			Console.Write($" Выбрать действие:");
+			string? action = Console.ReadLine();
 
-                        }
-                        else
-                        {
-                            Console.WriteLine($" Побег неудался");
-                            isEnemySearch = false;
-                            isHeroAttack = false;
+			switch (action)
+			{
+				case "1":
+					if (enemy is not null)
+					{
+						int chance = random.Next(0, 100);
 
-                        }
-                    }
-                    break;
-                case "3":
-                    if (enemy)
-                    {
-                        Console.WriteLine($" Враг уже есть, повторите действие");
-                        
-                    }
-                    else
-                    {
-                        int chance = random.Next(0, 100);
+						if (chance > 20)
+						{
+							enemy.Hit(playerDamage);
+							
+							if (enemy.IsAlive is false)
+							{
+								AddLog($"{currentRound} Герой получил {experienceGain} опыта");
+								
+								playerExpereince += experienceGain;
 
-                        if (chance > 20)
-                        {
-                            isEnemyOn = true;
-                            Console.WriteLine($" Результат поиска:\t   |=> Враг найден!");
-                            enemyHealth = countEnemyHealth;
-                            enemy = true;
-                            enemyFresh = true;
+								if (playerExpereince > 2)
+								{
+									playerLevel++;
+									AddLog($"{currentRound} Герой достиг {playerLevel} уровня! ");
+									playerDamage++;
+									basePlayerHealth++;
+									playerExpereince = 0;
+								}
 
-                        }
-                        else
-                        {
-                            isEnemySearch = true;
-                            Console.WriteLine($" Результат поиска: \t   |=> Поиск врага");
-                                isHeroAttack=false;
+								enemy = null;
+								playerHealth = basePlayerHealth;
+							}
+						}
+						else
+						{
+							AddLog($"{currentRound} Герой промахнулся");
+						}
+					}
 
-                        }
-                    }
-                    break;
-            }
+					break;
+				case "2":
+					if (enemy is not null)
+					{
+						int chance = random.Next(0, 100);
+						if (chance > 20)
+						{
+							AddLog($"{currentRound} Герой сбежал от врага");
+							enemy = null;
+						}
+						else
+						{
+							AddLog($"{currentRound} Побег неудался");
+						}
+					}
 
-        }
+					break;
+				case "3":
+					if (enemy is not null)
+					{
+						Console.WriteLine($" Враг уже есть, повторите действие");
+					}
+					else
+					{
+						int chance = random.Next(0, 100);
 
-        static void PerformEnemyAction()
-        {
-            if (enemy)
-            {               
-                if (enemy && enemyFresh == false)
-                {
-                    if (enemyHealth > 0)
-                    {
-                        int chance = random.Next(0, 100);
-                        if (chance > 20)
-                        {
-                            isEnemyAttack = true;
-                            Console.WriteLine($"\t\t\t   |=> Враг нанес {enemyDamage} урона");
-                            playerHealth -= 1;
-                        }
-                        else
-                        {
-                            Console.WriteLine($"\t\t\t   |=> Герой увернулся");
-                        }
-                    }
+						if (chance > 20)
+						{
+							AddLog($"{currentRound} Результат поиска: Враг найден!");
+							createEnemy = true;
+						}
+						else
+						{
+							AddLog($"{currentRound} Результат поиска: Никого");
+						}
+					}
 
-                    if (playerHealth <= 0)
-                    {
-                        Console.Clear();
-                        Console.WriteLine($" Герой погиб!\t|| Начать заново?");
-                        Console.WriteLine($" Возможные действия:");
-                        Console.WriteLine($" 1) = Начать заново");
-                        Console.WriteLine($" 2) = Покинуть игру");
+					break;
+			}
+		}
 
-                        string actionEsc = Console.ReadLine();
+		static void PerformEnemyAction()
+		{
+			if (enemy is not null)
+			{
+				if (enemy.Health > 0)
+				{
+					int chance = random.Next(0, 100);
+					
+					if (chance > 20)
+					{
+						AddLog($"{currentRound} Враг нанес {enemy.Damage} урона");
+						playerHealth -= enemy.Damage;
+					}
+					else
+					{
+						AddLog($"{currentRound} Герой увернулся");
+					}
+				}
 
-                        switch (actionEsc)
-                        {
-                            case "1":
-                                counterAction = 1;
-                                Console.Clear();
-                                playerHealth = countPlayerHealth;
-                                enemyHealth = countEnemyHealth;                                
-                                playerExperience = 0;
-                                enemy = false;
-                                isHeroAttack = false;
+				if (playerHealth <= 0)
+				{
+					Console.Clear();
+					logQueue.Clear();
+					Console.WriteLine($" Герой погиб!\t|| Начать заново?");
+					Console.WriteLine($" Возможные действия:");
+					Console.WriteLine($" 1) = Начать заново");
+					Console.WriteLine($" 2) = Покинуть игру");
 
-                                break;
+					string? actionEsc = Console.ReadLine();
 
-                            case "2":
-                                Console.Clear();
-                                Console.WriteLine($" Выход из игры");
-                                Exit=true;
-                                break;
+					switch (actionEsc)
+					{
+						case "1":
+							currentRound = 1;
+							Console.Clear();
+							playerHealth = basePlayerHealth;
+							enemy = null;
 
-                            default:
-                                Console.Clear();
-                                Console.WriteLine($" Выход из игры");
-                                Exit = true;
-                                break;
-                        }
-                    }
-                }
-                
-            }
+							break;
 
-        }
-    }
+						case "2":
+							Console.Clear();
+							Console.WriteLine($" Выход из игры");
+							exit = true;
+							break;
+
+						default:
+							Console.Clear();
+							Console.WriteLine($" Выход из игры");
+							exit = true;
+							break;
+					}
+				}
+			}
+			else if (createEnemy)
+			{
+				enemy = new Enemy(logQueue);
+				createEnemy = false;
+			}
+		}
+
+		private static void AddLog(string log)
+		{
+			const int maxLogElements = 10;
+
+			logQueue.Enqueue(log);
+
+			while (logQueue.Count > maxLogElements)
+				logQueue.Dequeue();
+		}
+
+		private static void ShowLog()
+		{
+			const int maxLogElements = 10;
+			
+			while (logQueue.Count > maxLogElements)
+				logQueue.Dequeue();
+			
+			foreach (var str in logQueue)
+				Console.WriteLine(str);
+		}
+	}
 }

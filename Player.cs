@@ -8,5 +8,9 @@ namespace MyGame
 {
     internal class Player
     {
+        public Player()
+        {
+            //playerHealth = basePlayerHealth;
+        }
     }
 }
