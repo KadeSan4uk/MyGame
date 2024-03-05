@@ -39,7 +39,7 @@ namespace MyGame
 		static void WorldTurn()
 		{
 			Console.WriteLine();
-			Console.WriteLine($" \t\t <=== Round {currentRound} ===>");
+			Console.WriteLine($" \t <=== Ход {currentRound} ===>");
 
 			if (enemy is null)
 			{
@@ -48,11 +48,11 @@ namespace MyGame
 				if (chance > 80)
 				{
 					enemy = new Enemy(logQueue);
-					AddLog($" An enemy has appeared at the door of your shack !");
+					AddLog($" В дверях вашей лочуги появился враг!");
 				}
 				else
 				{
-					AddLog($" Nothing happened in the world");
+					AddLog($" В мире ничего не произошло");
 				}
 			}
 		}
@@ -60,32 +60,30 @@ namespace MyGame
 		static void Status()
 		{
 			Console.WriteLine(
-				$" Player state: {(enemy is not null ? "in battle\n  " : "at rest\n")}");
+				$" Player state: {(enemy is not null ? "в бою\n  " : "в покое\n")}");
 
-			Console.WriteLine($"Player Level:\t {playerLevel}");
-			Console.WriteLine($"Player HP:\t {playerHealth}");
+			Console.WriteLine($" Игрок уровень:\t {playerLevel}");
+			Console.WriteLine($" Игрок жизни:\t {playerHealth}\n");
 
 			if (enemy is not null)
 			{
-				Console.WriteLine($"Enemy Level:\t {enemy.Level}");
-				Console.WriteLine($"Enemy HP:\t {enemy.Health}");
+				Console.WriteLine($" Враг уровень:\t {enemy.Level}");
+				Console.WriteLine($" Враг жизни:\t {enemy.Health}\n");
 			}
 		}
 
 		static void PerformPlayerAction()
-		{
-			Console.WriteLine();
-			
+		{						
 			if (enemy is null)
 			{
-				Console.WriteLine($" Possible action:");
-				Console.WriteLine($" 3) = look for the enemy");
+				Console.WriteLine($" Возможное действие:");
+				Console.WriteLine($" 3) = Искать врага");
 			}
 			else
 			{
-                Console.WriteLine($" Possible actions:");
-                Console.WriteLine($" 1) = Attack");
-				Console.WriteLine($" 2) = Run away");
+                Console.WriteLine($" Возможные действия:");
+                Console.WriteLine($" 1) = Атаковать");
+				Console.WriteLine($" 2) = Сбежать");
 			}
 			
 			string? action = Console.ReadLine();
@@ -103,14 +101,14 @@ namespace MyGame
 							
 							if (enemy.IsAlive is false)
 							{
-								AddLog($" Player received {experienceGain} experience");
+								AddLog($" Игрок получил {experienceGain} опыта");
 								
 								playerExpereince += experienceGain;
 
 								if (playerExpereince > 2)
 								{
 									playerLevel++;
-									AddLog($" Player has reached level {playerLevel} !");
+									AddLog($" Игрок достиг {playerLevel} уровня!");
 									playerDamage++;
 									basePlayerHealth++;
 									playerExpereince = 0;
@@ -122,7 +120,7 @@ namespace MyGame
 						}
 						else
 						{
-							AddLog($" Player missed");
+							AddLog($" Игрок промахнулся");
 						}
 					}
 
@@ -133,12 +131,12 @@ namespace MyGame
 						int chance = random.Next(0, 100);
 						if (chance > 20)
 						{
-							AddLog($" Player escaped from the enemy");
+							AddLog($" Побег удался");
 							enemy = null;
 						}
 						else
 						{
-							AddLog($" Escape failed");
+							AddLog($" Неудачная попытка побега");
 						}
 					}
 
@@ -146,7 +144,7 @@ namespace MyGame
 				case "3":
 					if (enemy is not null)
 					{
-						Console.WriteLine($" Enemy is already there, repeat the action");
+						Console.WriteLine($" Враг уже есть, повторите действие");
 					}
 					else
 					{
@@ -154,12 +152,12 @@ namespace MyGame
 
 						if (chance > 20)
 						{
-							AddLog($" Search result: Enemy found!");
+							AddLog($" Результат поиска: Враг найден!");
 							createEnemy = true;
 						}
 						else
 						{
-							AddLog($" Search result: Nobody");
+							AddLog($" Результат поиска: Никого");
 						}
 					}
 					break;
@@ -176,12 +174,12 @@ namespace MyGame
 					
 					if (chance > 20)
 					{
-						AddLog($" Enemy dealt {enemy.Damage} damage");
+						AddLog($" Враг нанес {enemy.Damage} урона");
 						playerHealth -= enemy.Damage;
 					}
 					else
 					{
-						AddLog($" Enemy missed");
+						AddLog($" Враг промахнулся");
 					}
 				}
 
@@ -189,17 +187,17 @@ namespace MyGame
 				{
 					Console.Clear();
 					logQueue.Clear();
-					Console.WriteLine($" Player died!\t|| Start again?");
-                    Console.WriteLine($" Possible actions:");
-                    Console.WriteLine($" 1) = Start again");
-					Console.WriteLine($" 2) = Leave the game");
+					Console.WriteLine($" Игрок погиб!\t|| Начать заново?");
+                    Console.WriteLine($" Возможные действия:");
+                    Console.WriteLine($" 1) = Начать заново");
+					Console.WriteLine($" 2) = Покинуть игру");
 
 					string? actionEsc = Console.ReadLine();
 
 					switch (actionEsc)
 					{
 						case "1":
-							currentRound = 1;
+							currentRound = 0;
 							Console.Clear();
 							playerHealth = basePlayerHealth;
 							enemy = null;
@@ -207,13 +205,13 @@ namespace MyGame
 
 						case "2":
 							Console.Clear();
-							Console.WriteLine($" Left the game");
+							Console.WriteLine($" Вышли из игры");
 							exit = true;
 							break;
 
 						default:
 							Console.Clear();
-                            Console.WriteLine($" Left the game");
+                            Console.WriteLine($" Вышли из игры");
                             exit = true;
 							break;
 					}
