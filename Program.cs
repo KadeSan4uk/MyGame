@@ -42,11 +42,11 @@ namespace MyGame
 				if (chance > 50)
 				{
 					enemy = new Enemy(logQueue);
-					AddLog($" В дверях вашей лочуги появился враг!");
+					Console.WriteLine($" В дверях вашей лочуги появился враг!");
 				}
 				else
 				{
-					AddLog($" В мире ничего не произошло");
+					Console.WriteLine($" В мире ничего не произошло");
 				}
 			}
 		}
@@ -103,7 +103,8 @@ namespace MyGame
 								{
 									player.Level++;
 									AddLog($" Игрок достиг {player.Level} уровня!");
-									player.Damage++;									
+									player.Damage++;
+									player.Health++;
 									player.Experience = 0;
 								}
 
@@ -235,7 +236,7 @@ namespace MyGame
 				logQueue.Dequeue();
 			
 			foreach (var str in logQueue)
-				Console.WriteLine(str);
+				Console.WriteLine($"ход{currentRound}) "+str);
 		}
 	}
 }
