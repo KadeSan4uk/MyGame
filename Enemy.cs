@@ -20,11 +20,11 @@
             
             if (!IsAlive)
             {
-                _logQueue.Enqueue($"Enemy received {damage} damage");
+                _logQueue.Enqueue($" Enemy received {damage} damage");
             }
             else
             {
-                _logQueue.Enqueue($"Enemy received {damage} damage, and died.");
+                _logQueue.Enqueue($" Enemy received {damage} damage, and died.");
             }
         }
     }
