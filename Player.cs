@@ -7,12 +7,19 @@ using System.Collections.Generic;
 namespace MyGame
 {
     public class Player
-    {       
-        //playerHealth = basePlayerHealth;
-        public int Health { get; private set; } = 4;
-        public int Damage { get; private set; } = 1;
-        public int Level { get; private set; } = 1;
-        public bool IsAlive => Health > 0;
+    {
+        public int baseHealth { get; private set; } = 4;
+        public int baseDamage { get; private set; } = 1;
+        public int baseLevel { get; private set; } = 1;
+        public int baseExperience { get; private set; } = 0;
+
+
+        
+        public int Health { get; set; } = 4;
+        public int Damage { get; set; } = 1;
+        public int Level { get; set; } = 1;
+        public int Experience { get; set; } = 0;
+        public bool IsAlive => Health > 0;        
 
         private Queue<string> _logQueue;
 
@@ -25,10 +32,15 @@ namespace MyGame
         {
             Health -= damage;
 
-            if (!IsAlive)
+            if (IsAlive)
             {
-                _logQueue.Enqueue($" Игрок получил {damage} урона");
-            }           
+                _logQueue.Enqueue($" Враг нанес {damage} урона");
+            }
+            else
+            {
+                _logQueue.Enqueue($" Игрок получил {damage} урона, и погиб");
+            }
+
         }
     }   
 }

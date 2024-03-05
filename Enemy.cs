@@ -18,9 +18,9 @@
         {
             Health -= damage;
             
-            if (!IsAlive)
+            if (IsAlive)
             {
-                _logQueue.Enqueue($" Враг получил {damage} урона");
+                _logQueue.Enqueue($" Игрок нанес {damage} урона");
             }
             else
             {

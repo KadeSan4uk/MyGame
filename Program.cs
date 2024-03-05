@@ -6,14 +6,10 @@ namespace MyGame
 	{
 		private static Random random = new();
 		private static Queue<string> logQueue = new();
-
-		private static int basePlayerHealth = 4;
-		private static int playerExpereince = 0;
-		private static int experienceGain = 1;
-		private static int playerLevel = 1;
-		private static int playerHealth;
-		private static int playerDamage = 1;
-
+		
+		private static int experience=1;
+		
+		private static Player player = new Player(logQueue);
 		private static Enemy? enemy = null;
 		private static bool createEnemy = false;
 
@@ -22,8 +18,6 @@ namespace MyGame
 
 		public static void Main(string[] args)
 		{
-			playerHealth = basePlayerHealth;
-			
 			while (!exit)
 			{
 				Console.Clear();
@@ -45,7 +39,7 @@ namespace MyGame
 			{
 				int chance = random.Next(0, 100);
 
-				if (chance > 80)
+				if (chance > 50)
 				{
 					enemy = new Enemy(logQueue);
 					AddLog($" В дверях вашей лочуги появился враг!");
@@ -60,10 +54,10 @@ namespace MyGame
 		static void Status()
 		{
 			Console.WriteLine(
-				$" Player state: {(enemy is not null ? "в бою\n  " : "в покое\n")}");
+				$" Состояние игрока: {(enemy is not null ? "в бою\n  " : "в покое\n")}");
 
-			Console.WriteLine($" Игрок уровень:\t {playerLevel}");
-			Console.WriteLine($" Игрок жизни:\t {playerHealth}\n");
+			Console.WriteLine($" Игрок уровень:\t {player.Level}");
+			Console.WriteLine($" Игрок жизни:\t {player.Health}\n");
 
 			if (enemy is not null)
 			{
@@ -97,25 +91,24 @@ namespace MyGame
 
 						if (chance > 20)
 						{
-							enemy.Hit(playerDamage);
+							enemy.Hit(player.Damage);
 							
 							if (enemy.IsAlive is false)
 							{
-								AddLog($" Игрок получил {experienceGain} опыта");
+								AddLog($" Игрок получил {experience} опыта");
 								
-								playerExpereince += experienceGain;
+								player.Experience += experience;
 
-								if (playerExpereince > 2)
+								if (player.Experience > 2)
 								{
-									playerLevel++;
-									AddLog($" Игрок достиг {playerLevel} уровня!");
-									playerDamage++;
-									basePlayerHealth++;
-									playerExpereince = 0;
+									player.Level++;
+									AddLog($" Игрок достиг {player.Level} уровня!");
+									player.Damage++;									
+									player.Experience = 0;
 								}
 
 								enemy = null;
-								playerHealth = basePlayerHealth;
+								player.Health = player.baseHealth;
 							}
 						}
 						else
@@ -175,7 +168,7 @@ namespace MyGame
 					if (chance > 20)
 					{
 						AddLog($" Враг нанес {enemy.Damage} урона");
-						playerHealth -= enemy.Damage;
+						player.Health -= enemy.Damage;
 					}
 					else
 					{
@@ -183,7 +176,7 @@ namespace MyGame
 					}
 				}
 
-				if (playerHealth <= 0)
+				if (player.Health <= 0)
 				{
 					Console.Clear();
 					logQueue.Clear();
@@ -199,7 +192,7 @@ namespace MyGame
 						case "1":
 							currentRound = 0;
 							Console.Clear();
-							playerHealth = basePlayerHealth;
+							player.Health = player.baseHealth;
 							enemy = null;
 							break;
 
