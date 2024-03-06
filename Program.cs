@@ -76,10 +76,10 @@ namespace MyGame
                 Console.WriteLine($" 1) = Атаковать");
 				Console.WriteLine($" 2) = Сбежать");
 			}
-			
-			string? action = Console.ReadLine();
 
-			switch (action)
+            string? action = Console.ReadLine();			
+
+            switch (action)
 			{
 				case "1":
 					if (enemy is not null)
