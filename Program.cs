@@ -88,7 +88,7 @@ namespace MyGame
 
 						if (chance > 20)
 						{
-							enemy.Hit(player.Damage);
+                            enemy.Hit(player.Damage);
 							
 							if (enemy.IsAlive is false)
 							{

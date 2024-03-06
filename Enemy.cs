@@ -1,9 +1,10 @@
-﻿namespace MyGame
+﻿
+namespace MyGame
 {
     public class Enemy
     {   
-        public int Health { get; private set; } = 3;
-        public int Damage { get; private set; } = 1;
+        public int Health { get; private set; } = 300;
+        public int Damage { get; private set; } = 100;
         public int Level { get; private set; } = 1;
         public bool IsAlive => Health > 0;
         

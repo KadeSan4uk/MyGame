@@ -8,15 +8,15 @@ namespace MyGame
 {
     public class Player
     {        
-        public int baseHealth { get; private set; } = 4;
-        public int baseDamage { get; private set; } = 1;
+        public int baseHealth { get; private set; } = 400;
+        public int baseDamage { get; private set; } = 100;
         public int baseLevel { get; private set; } = 1;
         public int baseExperience { get; private set; } = 0;
 
 
         
-        public int Health { get; set; } = 4;
-        public int Damage { get; set; } = 1;
+        public int Health { get; set; } = 400;
+        public int Damage { get; set; } = 100;
         public int Level { get; set; } = 1;
         public int Experience { get; set; } = 0;                
 
