@@ -7,7 +7,7 @@ using System.Collections.Generic;
 namespace MyGame
 {
     public class Player
-    {
+    {        
         public int baseHealth { get; private set; } = 4;
         public int baseDamage { get; private set; } = 1;
         public int baseLevel { get; private set; } = 1;
@@ -18,29 +18,18 @@ namespace MyGame
         public int Health { get; set; } = 4;
         public int Damage { get; set; } = 1;
         public int Level { get; set; } = 1;
-        public int Experience { get; set; } = 0;
-        public bool IsAlive => Health > 0;        
+        public int Experience { get; set; } = 0;                
 
         private Queue<string> _logQueue;
-
         public Player(Queue<string> logQueue)
         {
             _logQueue = logQueue;
         }
-
         public void Hit(int damage)
         {
-            Health -= damage;
-
-            if (IsAlive)
-            {
-                _logQueue.Enqueue($" Враг нанес {damage} урона");
-            }
-            else
-            {
-                _logQueue.Enqueue($" Игрок получил {damage} урона, и погиб");
-            }
-
+            Health -= damage;            
+            
+           _logQueue.Enqueue($" Враг нанес {damage} урона");                       
         }
     }   
 }

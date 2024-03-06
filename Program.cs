@@ -5,15 +5,12 @@ namespace MyGame
 	public class Program
 	{
 		private static Random random = new();
-		private static Queue<string> logQueue = new();
-		
-		private static int experience=1;
-		
+		private static Queue<string> logQueue = new();					
 		private static Player player = new Player(logQueue);
 		private static Enemy? enemy = null;
 		private static bool createEnemy = false;
-
-		private static int currentRound = 1;
+        private static int experience = 1;
+        private static int currentRound = 1;
 		private static bool exit = false;
 
 		public static void Main(string[] args)
@@ -194,6 +191,9 @@ namespace MyGame
 							currentRound = 0;
 							Console.Clear();
 							player.Health = player.baseHealth;
+							player.Damage=player.baseDamage;
+							player.Level = player.baseLevel;
+							player.Experience = player.baseExperience;
 							enemy = null;
 							break;
 
@@ -236,7 +236,7 @@ namespace MyGame
 				logQueue.Dequeue();
 			
 			foreach (var str in logQueue)
-				Console.WriteLine($"ход{currentRound}) "+str);
+				Console.WriteLine(str);
 		}
 	}
 }
