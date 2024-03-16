@@ -6,8 +6,9 @@ namespace MyGame
 	{
 		private static Random random = new();
 		private static Queue<string> logQueue = new();					
-		private static Player player = new Player(logQueue);
-		private static Enemy? enemy = null;
+		private static Player player = new Player(logQueue);		
+        private static Enemy? enemy = null;
+		private static bool missChance=false;
 		private static bool createEnemy = false;
         private static int experience = 1;
         private static int currentRound = 1;
@@ -28,8 +29,8 @@ namespace MyGame
 		}
 
 		static void WorldTurn()
-		{
-			Console.WriteLine();
+		{		
+            Console.WriteLine();
 			Console.WriteLine($" \t <=== Ход {currentRound} ===>");
 
 			if (enemy is null)
@@ -85,33 +86,39 @@ namespace MyGame
 					if (enemy is not null)
 					{
 						int chance = random.Next(0, 100);
+						if (missChance)
+						{
+							chance = 99;
+						}
 
 						if (chance > 20)
-						{
+						{							
                             enemy.Hit(player.Damage);
+							missChance=false;
 							
 							if (enemy.IsAlive is false)
 							{
 								AddLog($" Игрок получил {experience} опыта");
-								
-								player.Experience += experience;
 
-								if (player.Experience > 2)
+								player.UpdateDamageHealth();                                
+                                player.Experience += experience;                                
+                                enemy = null;
+
+                                if (player.Experience > 2)
 								{
 									player.Level++;
 									AddLog($" Игрок достиг {player.Level} уровня!");
-									player.Damage++;
-									player.Health++;
-									player.Experience = 0;
-								}
-
-								enemy = null;
-								player.Health = player.baseHealth;
+                                    AddLog($" Жизни + 50, Урон + 50");
+                                    player.ProgressDamageHealth(50, 50);
+                                    player.UpdateDamageHealth();
+                                    player.Experience = 0;
+								}						
 							}
 						}
 						else
 						{
 							AddLog($" Игрок промахнулся");
+							missChance = true;							
 						}
 					}
 
@@ -190,11 +197,8 @@ namespace MyGame
 						case "1":
 							currentRound = 0;
 							Console.Clear();
-							player.Health = player.baseHealth;
-							player.Damage=player.baseDamage;
-							player.Level = player.baseLevel;
-							player.Experience = player.baseExperience;
-							enemy = null;
+                            player = new Player(logQueue);
+                            enemy = null;
 							break;
 
 						case "2":

@@ -8,22 +8,23 @@ namespace MyGame
 {
     public class Player
     {        
-        public int baseHealth { get; private set; } = 400;
-        public int baseDamage { get; private set; } = 100;
-        public int baseLevel { get; private set; } = 1;
-        public int baseExperience { get; private set; } = 0;
-
-
-        
-        public int Health { get; set; } = 400;
-        public int Damage { get; set; } = 100;
-        public int Level { get; set; } = 1;
-        public int Experience { get; set; } = 0;                
-
+        private const int baseHealth = 400;
+        private const int baseDamage = 100;
+        private const int baseLevel = 1;
+        private const int baseExperience = 0;
+        public int Health;
+        public int Damage;
+        public int Level;
+        public int Experience;      
+                             
         private Queue<string> _logQueue;
         public Player(Queue<string> logQueue)
         {
             _logQueue = logQueue;
+            Health = baseHealth;
+            Damage = baseDamage;
+            Level = baseLevel;
+            Experience = baseExperience;
         }
         public void Hit(int damage)
         {
@@ -31,5 +32,17 @@ namespace MyGame
             
            _logQueue.Enqueue($" Враг нанес {damage} урона");                       
         }
+        private int ProgresHealth;
+        private int ProgresDamage;               
+        public void ProgressDamageHealth(int damage,int health)
+        {
+            ProgresDamage += damage;
+            ProgresHealth += health;                      
+        }
+        public void UpdateDamageHealth() 
+        {
+            Health = baseHealth+ProgresHealth; 
+            Damage = baseDamage+ProgresDamage;
+        }        
     }   
 }
