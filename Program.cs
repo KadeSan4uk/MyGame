@@ -13,9 +13,11 @@ namespace MyGame
         private static int experience = 1;
         private static int currentRound = 1;
 		private static bool exit = false;
+		private static string namePlayer = "";
+		private static bool isPlayerName=false;
 
 		public static void Main(string[] args)
-		{
+		{			
 			while (!exit)
 			{
 				Console.Clear();
@@ -55,12 +57,12 @@ namespace MyGame
 				$" Состояние игрока: {(enemy is not null ? "в бою\n  " : "в покое\n")}");
 
 			Console.WriteLine($" Игрок уровень:\t {player.Level}");
-			Console.WriteLine($" Игрок жизни:\t {player.Health}\n");
+			Console.WriteLine($" \t жизни:\t {player.Health}\n");
 
 			if (enemy is not null)
 			{
-				Console.WriteLine($" Враг уровень:\t {enemy.Level}");
-				Console.WriteLine($" Враг жизни:\t {enemy.Health}\n");
+				Console.WriteLine($"  Враг уровень:\t {enemy.Level}");
+				Console.WriteLine($"   \t жизни:\t {enemy.Health}\n");
 			}
 		}
 
@@ -241,5 +243,23 @@ namespace MyGame
 			foreach (var str in logQueue)
 				Console.WriteLine(str);
 		}
+
+		private static void PlayerName()
+		{
+            while (!isPlayerName)
+            {
+                Console.WriteLine($"Введите имя: максимум 10 символов.");
+                namePlayer = Console.ReadLine();
+                if (namePlayer.Length < 11)
+                {
+                    isPlayerName = true;
+                }
+                else
+                {
+                    Console.WriteLine($"Недопустимое количество символов.");
+                    isPlayerName = false;
+                }
+            }
+        }
 	}
 }
