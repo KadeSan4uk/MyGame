@@ -32,7 +32,7 @@ namespace MyGame
             }
             else
             {
-                _logQueue.Enqueue($" Враг получил {damage} урона, и погиб.");
+                _logQueue.Enqueue($" Игрок нанес {damage} урона, враг погиб.");
             }
         }
     }

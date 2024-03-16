@@ -32,6 +32,7 @@ namespace MyGame
             
            _logQueue.Enqueue($" Враг нанес {damage} урона");                       
         }
+        
         private int ProgresHealth;
         private int ProgresDamage;               
         public void ProgressDamageHealth(int damage,int health)

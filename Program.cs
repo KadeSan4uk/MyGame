@@ -172,8 +172,7 @@ namespace MyGame
 					
 					if (chance > 20)
 					{
-						AddLog($" Враг нанес {enemy.Damage} урона");
-						player.Health -= enemy.Damage;
+						player.Hit(enemy.Damage);
 					}
 					else
 					{
