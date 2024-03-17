@@ -8,10 +8,10 @@ namespace MyGame
 {
     public class Player
     {        
-        private const int baseHealth = 400;
-        private const int baseDamage = 100;
-        private const int baseLevel = 1;
-        private const int baseExperience = 0;
+        private const int _Health = 400;
+        private const int _Damage = 100;
+        private const int _Level = 1;
+        private const int _Experience = 0;
         public int Health;
         public int Damage;
         public int Level;
@@ -21,10 +21,10 @@ namespace MyGame
         public Player(Queue<string> logQueue)
         {
             _logQueue = logQueue;
-            Health = baseHealth;
-            Damage = baseDamage;
-            Level = baseLevel;
-            Experience = baseExperience;
+            Health = _Health;
+            Damage = _Damage;
+            Level = _Level;
+            Experience = _Experience;
         }
         public void Hit(int damage)
         {
@@ -42,8 +42,8 @@ namespace MyGame
         }
         public void UpdateDamageHealth() 
         {
-            Health = baseHealth+ProgresHealth; 
-            Damage = baseDamage+ProgresDamage;
+            Health = _Health+ProgresHealth; 
+            Damage = _Damage+ProgresDamage;
         }        
     }   
 }
