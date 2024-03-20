@@ -4,9 +4,9 @@ namespace MyGame
 {
 	public class Program
 	{
-		private static Random random = new();
-		private static Queue<string> logQueue = new();					
-		private static Player player = new Player(logQueue);		
+		private static Random random;
+		private static Logger logger;
+		private static Player player;
         private static Enemy? enemy = null;
 		private static bool missChance=false;
 		private static bool createEnemy = false;
@@ -15,13 +15,17 @@ namespace MyGame
 		private static bool exit = false;
 		private static string namePlayer = "";
 		private static bool isPlayerName=false;
+        
 
-		public static void Main(string[] args)
-		{			
-			while (!exit)
+        public static void Main(string[] args)
+		{
+            random = new();
+            logger = new Logger();
+            player = new Player(logger);
+            while (!exit)
 			{
 				Console.Clear();
-				ShowLog();
+				logger.ShowLog();
 				WorldTurn();
 				Status();
 				PerformPlayerAction();
@@ -41,7 +45,7 @@ namespace MyGame
 
 				if (chance > 50)
 				{
-					enemy = new Enemy(logQueue);
+					enemy = new Enemy(logger);
 					Console.WriteLine($" В дверях вашей лочуги появился враг!");
 				}
 				else
@@ -100,7 +104,7 @@ namespace MyGame
 							
 							if (enemy.IsAlive is false)
 							{
-								AddLog($" Игрок получил {experience} опыта");
+								logger.AddLog($" Игрок получил {experience} опыта");
 
 								player.UpdateDamageHealth();                                
                                 player.Experience += experience;                                
@@ -109,8 +113,8 @@ namespace MyGame
                                 if (player.Experience > 2)
 								{
 									player.Level++;
-									AddLog($" Игрок достиг {player.Level} уровня!");
-                                    AddLog($" Жизни + 50, Урон + 50");
+									logger.AddLog($" Игрок достиг {player.Level} уровня!");
+                                    logger.AddLog($" Жизни + 50, Урон + 50");
                                     player.ProgressDamageHealth(50, 50);
                                     player.UpdateDamageHealth();
                                     player.Experience = 0;
@@ -119,7 +123,7 @@ namespace MyGame
 						}
 						else
 						{
-							AddLog($" Игрок промахнулся");
+							logger.AddLog($" Игрок промахнулся");
 							missChance = true;							
 						}
 					}
@@ -131,12 +135,12 @@ namespace MyGame
 						int chance = random.Next(0, 100);
 						if (chance > 20)
 						{
-							AddLog($" Побег удался");
+							logger.AddLog($" Побег удался");
 							enemy = null;
 						}
 						else
 						{
-							AddLog($" Неудачная попытка побега");
+                            logger.AddLog($" Неудачная попытка побега");
 						}
 					}
 
@@ -152,12 +156,12 @@ namespace MyGame
 
 						if (chance > 20)
 						{
-							AddLog($" Результат поиска: Враг найден!");
+                            logger.AddLog($" Результат поиска: Враг найден!");
 							createEnemy = true;
 						}
 						else
 						{
-							AddLog($" Результат поиска: Никого");
+                            logger.AddLog($" Результат поиска: Никого");
 						}
 					}
 					break;
@@ -178,14 +182,14 @@ namespace MyGame
 					}
 					else
 					{
-						AddLog($" Враг промахнулся");
+						logger.AddLog($" Враг промахнулся");
 					}
 				}
 
 				if (player.Health <= 0)
 				{
 					Console.Clear();
-					logQueue.Clear();
+					logger.Clear();
 					Console.WriteLine($" Игрок погиб!\t|| Начать заново?");
                     Console.WriteLine($" Возможные действия:");
                     Console.WriteLine($" 1) = Начать заново");
@@ -198,7 +202,7 @@ namespace MyGame
 						case "1":
 							currentRound = 0;
 							Console.Clear();
-                            player = new Player(logQueue);
+                            player = new Player(logger);
                             enemy = null;
 							break;
 
@@ -218,31 +222,10 @@ namespace MyGame
 			}
 			else if (createEnemy)
 			{
-				enemy = new Enemy(logQueue);
+				enemy = new Enemy(logger);
 				createEnemy = false;
 			}
-		}
-
-		private static void AddLog(string log)
-		{
-			const int maxLogElements = 10;
-
-			logQueue.Enqueue(log);
-
-			while (logQueue.Count > maxLogElements)
-				logQueue.Dequeue();
-		}
-
-		private static void ShowLog()
-		{
-			const int maxLogElements = 10;
-			
-			while (logQueue.Count > maxLogElements)
-				logQueue.Dequeue();
-			
-			foreach (var str in logQueue)
-				Console.WriteLine(str);
-		}
+		}	
 
 		private static void PlayerName()
 		{

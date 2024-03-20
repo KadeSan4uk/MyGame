@@ -1,8 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Collections.Generic;
+﻿
 
 namespace MyGame
 {
@@ -15,26 +11,30 @@ namespace MyGame
         public int Health;
         public int Damage;
         public int Level;
-        public int Experience;      
-                             
-        private Queue<string> _logQueue;
-        public Player(Queue<string> logQueue)
-        {
-            _logQueue = logQueue;
+        public int Experience;
+        private int ProgresHealth;
+        private int ProgresDamage;
+        private Logger _log;
+        
+
+        public Player(Logger log)
+        {        
+            _log = log;
             Health = _Health;
             Damage = _Damage;
             Level = _Level;
             Experience = _Experience;
         }
+
+        
+
         public void Hit(int damage)
         {
-            Health -= damage;            
-            
-           _logQueue.Enqueue($" Враг нанес {damage} урона");                       
-        }
-        
-        private int ProgresHealth;
-        private int ProgresDamage;               
+            Health -= damage;
+
+           _log.AddLog($" Враг нанес {damage} урона");
+        }       
+                      
         public void ProgressDamageHealth(int damage,int health)
         {
             ProgresDamage += damage;

@@ -11,11 +11,12 @@ namespace MyGame
         public int Level;
         
         
-        private Queue<string> _logQueue;
+        private Logger _log;
+        
 
-        public Enemy(Queue<string> logQueue)
+        public Enemy(Logger log)
         {
-            _logQueue = logQueue;
+            _log = log;       
             Health=_Health;
             Damage=_Damage;
             Level=_Level;
@@ -28,11 +29,11 @@ namespace MyGame
             
             if (IsAlive)
             {
-                _logQueue.Enqueue($" Игрок нанес {damage} урона");
+                _log.AddLog($" Игрок нанес {damage} урона");
             }
             else
             {
-                _logQueue.Enqueue($" Игрок нанес {damage} урона, враг погиб.");
+                _log.AddLog($" Игрок нанес {damage} урона, враг погиб.");
             }
         }
     }
