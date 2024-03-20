@@ -7,6 +7,7 @@ namespace MyGame
 		private static Random random;
 		private static Logger logger;
 		private static Player player;
+		private static Actions _action;
         private static Enemy? enemy = null;
 		private static bool missChance=false;
 		private static bool createEnemy = false;
@@ -15,12 +16,14 @@ namespace MyGame
 		private static bool exit = false;
 		private static string namePlayer = "";
 		private static bool isPlayerName=false;
+		
         
 
         public static void Main(string[] args)
 		{
             random = new();
             logger = new Logger();
+            _action = new Actions(logger);
             player = new Player(logger);
             while (!exit)
 			{
@@ -57,34 +60,28 @@ namespace MyGame
 
 		static void Status()
 		{
-			Console.WriteLine(
-				$" Состояние игрока: {(enemy is not null ? "в бою\n  " : "в покое\n")}");
+			Console.WriteLine($" Состояние игрока: {(enemy is not null ? "в бою\n  " : "в покое\n")}");
 
-			Console.WriteLine($" Игрок уровень:\t {player.Level}");
-			Console.WriteLine($" \t жизни:\t {player.Health}\n");
+			player.HealthStatus();
 
-			if (enemy is not null)
+            if (enemy is not null)
 			{
-				Console.WriteLine($"  Враг уровень:\t {enemy.Level}");
-				Console.WriteLine($"   \t жизни:\t {enemy.Health}\n");
-			}
+				enemy.EnemyHealthStatus();
+            }
 		}
 
 		static void PerformPlayerAction()
-		{						
+		{
 			if (enemy is null)
 			{
-				Console.WriteLine($" Возможное действие:");
-				Console.WriteLine($" 3) = Искать врага");
+				_action.ActionSearch();
 			}
 			else
 			{
-                Console.WriteLine($" Возможные действия:");
-                Console.WriteLine($" 1) = Атаковать");
-				Console.WriteLine($" 2) = Сбежать");
+				_action.ActionAttack();
 			}
 
-            string? action = Console.ReadLine();			
+			string? action = Console.ReadLine();			
 
             switch (action)
 			{
@@ -104,26 +101,19 @@ namespace MyGame
 							
 							if (enemy.IsAlive is false)
 							{
-								logger.AddLog($" Игрок получил {experience} опыта");
-
-								player.UpdateDamageHealth();                                
-                                player.Experience += experience;                                
+								player.GetExperience();
+								player.UpdateDamageHealth();                                                                                            
                                 enemy = null;
 
                                 if (player.Experience > 2)
 								{
-									player.Level++;
-									logger.AddLog($" Игрок достиг {player.Level} уровня!");
-                                    logger.AddLog($" Жизни + 50, Урон + 50");
-                                    player.ProgressDamageHealth(50, 50);
-                                    player.UpdateDamageHealth();
-                                    player.Experience = 0;
+									player.UpdateExperience();
 								}						
 							}
 						}
 						else
 						{
-							logger.AddLog($" Игрок промахнулся");
+							player.Miss();
 							missChance = true;							
 						}
 					}
@@ -135,33 +125,29 @@ namespace MyGame
 						int chance = random.Next(0, 100);
 						if (chance > 20)
 						{
-							logger.AddLog($" Побег удался");
+							player.EscapeLuck();
 							enemy = null;
 						}
 						else
 						{
-                            logger.AddLog($" Неудачная попытка побега");
+                            player.EscapeFalse();
 						}
 					}
 
 					break;
 				case "3":
-					if (enemy is not null)
-					{
-						Console.WriteLine($" Враг уже есть, повторите действие");
-					}
-					else
+					if (enemy is  null)																	
 					{
 						int chance = random.Next(0, 100);
 
 						if (chance > 20)
 						{
-                            logger.AddLog($" Результат поиска: Враг найден!");
+							_action.EnemySearchLuck();
 							createEnemy = true;
 						}
 						else
 						{
-                            logger.AddLog($" Результат поиска: Никого");
+                            _action.EnemySearchFalse();
 						}
 					}
 					break;
@@ -182,18 +168,13 @@ namespace MyGame
 					}
 					else
 					{
-						logger.AddLog($" Враг промахнулся");
+						enemy.EnemyMiss();
 					}
 				}
 
 				if (player.Health <= 0)
 				{
-					Console.Clear();
-					logger.Clear();
-					Console.WriteLine($" Игрок погиб!\t|| Начать заново?");
-                    Console.WriteLine($" Возможные действия:");
-                    Console.WriteLine($" 1) = Начать заново");
-					Console.WriteLine($" 2) = Покинуть игру");
+					_action.PlayerIsDead();
 
 					string? actionEsc = Console.ReadLine();
 
@@ -202,6 +183,7 @@ namespace MyGame
 						case "1":
 							currentRound = 0;
 							Console.Clear();
+							logger.Clear();
                             player = new Player(logger);
                             enemy = null;
 							break;

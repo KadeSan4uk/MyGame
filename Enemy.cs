@@ -1,4 +1,5 @@
-﻿
+﻿using System;
+
 namespace MyGame
 {
     public class Enemy
@@ -35,6 +36,15 @@ namespace MyGame
             {
                 _log.AddLog($" Игрок нанес {damage} урона, враг погиб.");
             }
+        }
+        public void EnemyMiss()
+        {
+            _log.AddLog($" Враг промахнулся");
+        }
+        public void EnemyHealthStatus() 
+        {
+            Console.WriteLine($"  Враг уровень:\t {Level}");
+            Console.WriteLine($"   \t жизни:\t {Health}\n");
         }
     }
 }
