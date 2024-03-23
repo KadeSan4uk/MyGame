@@ -10,10 +10,9 @@ namespace MyGame
         public int Health;
         public int Damage;
         public int Level;
-        
-        
-        private Logger _log;
-        
+
+        public bool IsAlive => Health > 0;
+        private Logger _log;        
 
         public Enemy(Logger log)
         {
@@ -22,7 +21,6 @@ namespace MyGame
             Damage=_Damage;
             Level=_Level;
         }
-        public bool IsAlive => Health > 0;
 
         public void Hit(int damage)
         {

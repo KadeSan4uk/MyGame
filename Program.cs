@@ -5,6 +5,7 @@ namespace MyGame
 	public class Program
 	{
 		private static Random random;
+		private static World world;
 		private static Logger logger;
 		private static Player player;
 		private static Actions _action;
@@ -12,51 +13,29 @@ namespace MyGame
 		private static bool missChance=false;
 		private static bool createEnemy = false;
         private static int experience = 1;
-        private static int currentRound = 1;
+        private static int currentRound=1;
 		private static bool exit = false;
 		private static string namePlayer = "";
-		private static bool isPlayerName=false;
-		
-        
+		private static bool isPlayerName=false;        
 
         public static void Main(string[] args)
 		{
             random = new();
             logger = new Logger();
+			world = new World(logger);
             _action = new Actions(logger);
             player = new Player(logger);
             while (!exit)
 			{
-				Console.Clear();
+                Console.Clear();
 				logger.ShowLog();
-				WorldTurn();
+				world.WorldTurn(currentRound,ref enemy);
 				Status();
 				PerformPlayerAction();
 				PerformEnemyAction();
-				currentRound++;
-			}
-		}
-
-		static void WorldTurn()
-		{		
-            Console.WriteLine();
-			Console.WriteLine($" \t <=== Ход {currentRound} ===>");
-
-			if (enemy is null)
-			{
-				int chance = random.Next(0, 100);
-
-				if (chance > 50)
-				{
-					enemy = new Enemy(logger);
-					Console.WriteLine($" В дверях вашей лочуги появился враг!");
-				}
-				else
-				{
-					Console.WriteLine($" В мире ничего не произошло");
-				}
-			}
-		}
+                currentRound++;
+            }
+        }		
 
 		static void Status()
 		{
