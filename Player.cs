@@ -4,172 +4,201 @@ using static System.Collections.Specialized.BitVector32;
 
 namespace MyGame
 {
-    public class Player
-    {        
-        private const int _Health = 400;
-        private const int _Damage = 100;
-        private const int _Level = 1;
-        private const int _Experience = 0;
-        public int Health;
-        public int Damage;
-        public int Level;
-        public int Experience;
-        private int ProgresHealth;
-        private int ProgresDamage;
-        private int experience = 1;
-        private Logger _log;
-        private ActionGame _action;
-        private Random _random=new Random();
+	public class Player
+	{
+		public event Action FindEnemyEvent;
+		public event Action DiedEvent;
 
-        public Player(Logger log)
-        {        
-            _log = log;
-            Health = _Health;
-            Damage = _Damage;
-            Level = _Level;
-            Experience = _Experience;
-        }        
+		private const int _Health = 400;
+		private const int _Damage = 100;
+		private const int _Level = 1;
+		private const int _Experience = 0;
+		public int Health;
+		public int Damage;
+		public int Level;
+		public int Experience;
+		private int ProgresHealth;
+		private int ProgresDamage;
+		private Logger _log;
+		private Random _random = new Random();
+		private Enemy? _currentEnemy;
+		private bool missChance;
 
-        public void Hit(int damage)
-        {
-            Health -= damage;
+		public Player(Logger log)
+		{
+			_log = log;
+			Health = _Health;
+			Damage = _Damage;
+			Level = _Level;
+			Experience = _Experience;
+		}
 
-           _log.AddLog($" Враг нанес {damage} урона");
-        }                            
-        public void Miss()
-        {
-            _log.AddLog($" Игрок промахнулся");
-        }
-        public void EscapeLuck()
-        {
-            _log.AddLog($" Побег удался");
-        }
-        public void EscapeFalse()
-        {
-            _log.AddLog($" Неудачная попытка побега");
-        }
-        public void ProgressDamageHealth(int damage,int health)
-        {
-            ProgresDamage += damage;
-            ProgresHealth += health;                      
-        }
-        public void UpdateDamageHealth() 
-        {
-            Health = _Health+ProgresHealth; 
-            Damage = _Damage+ProgresDamage;
-        } 
-        public void GetExperience()
-        {
-            _log.AddLog($" Игрок получил {experience} опыта");
-            Experience += experience;
-        }
-        public void UpdateExperience()
-        {
-            Level++;
-            _log.AddLog($" Игрок достиг {Level} уровня!");
-            _log.AddLog($" Жизни + 50, Урон + 50");
-            ProgressDamageHealth(50, 50);
-            UpdateDamageHealth();
-            Experience = 0;
-        }
-        public void HealthStatus()
-        {
-            Console.WriteLine($" Игрок уровень:\t {Level}");
-            Console.WriteLine($" \t жизни:\t {Health}\n");
-        }
-        public Enemy? StatusPlayer( ref Enemy? enemy)
-        {
-            Console.WriteLine($" Состояние игрока: {(enemy is not null ? "в бою\n  " : "в покое\n")}");
+		public void Hit(int damage)
+		{
+			Health -= damage;
 
-            HealthStatus();
+			_log.AddLog($" Враг нанес {damage} урона");
+			
+			if (Health <= 0)
+			{
+				DiedEvent?.Invoke();
+			}
+		}
 
-            if (enemy is not null)
-            {
-                enemy.EnemyHealthStatus();
-            }
-            return enemy;
-        }
-        public Enemy? PerformPlayerAction(ref Enemy? enemy, bool missChance,bool createEnemy,string action)
-        {           
-             action = Console.ReadLine();
+		public void Miss()
+		{
+			_log.AddLog($" Игрок промахнулся");
+		}
 
-            if (enemy is null)            
-                _action.ActionSearch();            
-            else            
-                _action.ActionAttack();            
+		public void EscapeLuck()
+		{
+			_log.AddLog($" Побег удался");
+		}
 
-            switch (action)
-            {
-                case "1":
-                    if (enemy is not null)
-                    {
-                        int chance = _random.Next(0, 100);
-                        if (missChance)
-                        {
-                            chance = 99;
-                        }
+		public void EscapeFalse()
+		{
+			_log.AddLog($" Неудачная попытка побега");
+		}
 
-                        if (chance > 20)
-                        {
-                            enemy.Hit(Damage);
-                            missChance = false;
+		public void ProgressDamageHealth(int damage, int health)
+		{
+			ProgresDamage += damage;
+			ProgresHealth += health;
+		}
 
-                            if (enemy.IsAlive is false)
-                            {
-                                GetExperience();
-                                UpdateDamageHealth();
-                                enemy = null;
+		public void UpdateDamageHealth()
+		{
+			Health = _Health + ProgresHealth;
+			Damage = _Damage + ProgresDamage;
+		}
 
-                                if (Experience > 2)
-                                {
-                                    UpdateExperience();
-                                }
-                            }
-                        }
-                        else
-                        {
-                            Miss();
-                            missChance = true;                            
-                        }
-                    }
+		public void UpdateExperience(int experience)
+		{
+			_log.AddLog($" Игрок получил {experience} опыта");
+			Experience += experience;
+			
+			if (Experience > 2)
+			{
+				LevelUp();
+			}
+		}
 
-                    break;
-                case "2":
-                    if (enemy is not null)
-                    {
-                        int chance = _random.Next(0, 100);
-                        if (chance > 20)
-                        {
-                            EscapeLuck();
-                            enemy = null;
-                        }
-                        else
-                        {
-                            EscapeFalse();
-                        }
-                    }
+		private void LevelUp()
+		{
+			Level++;
+			_log.AddLog($" Игрок достиг {Level} уровня!");
+			_log.AddLog($" Жизни + 50, Урон + 50");
+			ProgressDamageHealth(50, 50);
+			UpdateDamageHealth();
+			Experience = 0;
+		}
 
-                    break;
-                case "3":
-                    if (enemy is null)
-                    {
-                        int chance = _random.Next(0, 100);
+		public void HealthStatus()
+		{
+			Console.WriteLine($" Игрок уровень:\t {Level}");
+			Console.WriteLine($" \t жизни:\t {Health}\n");
+		}
 
-                        if (chance > 20)
-                        {
-                            _action.EnemySearchLuck();
-                            createEnemy = true;
-                        }
-                        else
-                        {
-                            _action.EnemySearchFalse();
-                        }
-                    }
-                    break;
-            }
-            return enemy;
-        }
-        
-    } 
-   
+		public void StatusPlayer()
+		{
+			Console.WriteLine(
+				$" Состояние игрока: {(_currentEnemy is not null ? "в бою\n  " : "в покое\n")}");
+
+			HealthStatus();
+		}
+
+		public void PerformPlayerAction()
+		{
+			var action = Console.ReadLine();
+
+			if (_currentEnemy is null)
+			{
+				Console.WriteLine($" Возможное действие:");
+				Console.WriteLine($" 3) = Искать врага");
+			}
+			else
+			{
+				Console.WriteLine($" Возможные действия:");
+				Console.WriteLine($" 1) = Атаковать");
+				Console.WriteLine($" 2) = Сбежать");
+			}
+
+			switch (action)
+			{
+				case "1":
+					if (_currentEnemy is not null)
+					{
+						int chance = _random.Next(0, 100);
+						if (missChance)
+						{
+							chance = 99;
+						}
+
+						if (chance > 20)
+						{
+							_currentEnemy.Hit(Damage);
+							missChance = false;
+//
+//							if (_currentEnemy.IsAlive is not true)
+//							{
+//								UpdateExperience();
+////								UpdateDamageHealth();
+//								_currentEnemy = null;
+//
+//								if (Experience > 2)
+//								{
+//									LevelUp();
+//								}
+//							}
+						}
+						else
+						{
+							Miss();
+							missChance = true;
+						}
+					}
+
+					break;
+				case "2":
+					if (_currentEnemy is not null)
+					{
+						int chance = _random.Next(0, 100);
+						if (chance > 20)
+						{
+							EscapeLuck();
+							_currentEnemy = null;
+						}
+						else
+						{
+							EscapeFalse();
+						}
+					}
+
+					break;
+				case "3":
+					if (_currentEnemy is null)
+					{
+						int chance = _random.Next(0, 100);
+
+						if (chance > 20)
+						{
+							_log.AddLog($" Результат поиска: Враг найден!");
+							FindEnemyEvent?.Invoke();
+						}
+						else
+						{
+							_log.AddLog($" Результат поиска: Никого");
+						}
+					}
+
+					break;
+			}
+		}
+
+
+		public void SetEnemy(Enemy? enemy)
+		{
+			_currentEnemy = enemy;
+		}
+	}
 }
