@@ -8,7 +8,7 @@ namespace MyGame
 		private static World world;
 		private static Logger logger;
 		private static Player player;
-		private static Actions _action;
+		private static ActionGame _action;
         private static Enemy? enemy = null;
 		private static bool missChance=false;
 		private static bool createEnemy = false;
@@ -16,38 +16,29 @@ namespace MyGame
         private static int currentRound=1;
 		private static bool exit = false;
 		private static string namePlayer = "";
-		private static bool isPlayerName=false;        
+		private static bool isPlayerName=false;
+		private static string? action;
 
         public static void Main(string[] args)
 		{
             random = new();
             logger = new Logger();
-			world = new World(logger);
-            _action = new Actions(logger);
+            world = new World(logger);
+            _action = new ActionGame(logger);
             player = new Player(logger);
             while (!exit)
 			{
                 Console.Clear();
 				logger.ShowLog();
 				world.WorldTurn(currentRound,ref enemy);
-				Status();
-				PerformPlayerAction();
+				player.StatusPlayer(ref enemy);
+				player.PerformPlayerAction(ref enemy,missChance,createEnemy,action);
 				PerformEnemyAction();
                 currentRound++;
             }
         }		
 
-		static void Status()
-		{
-			Console.WriteLine($" Состояние игрока: {(enemy is not null ? "в бою\n  " : "в покое\n")}");
-
-			player.HealthStatus();
-
-            if (enemy is not null)
-			{
-				enemy.EnemyHealthStatus();
-            }
-		}
+		
 
 		static void PerformPlayerAction()
 		{

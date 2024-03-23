@@ -6,11 +6,11 @@ using System.Collections.Generic;
 
 namespace MyGame
 {       
-    public class Actions
+    public class ActionGame
     {
         private Logger _log;
         
-        public Actions(Logger log)
+        public ActionGame(Logger log)
         {
             _log = log;
         }

@@ -1,4 +1,6 @@
-﻿using System.Numerics;
+﻿using System;
+using System.Numerics;
+using static System.Collections.Specialized.BitVector32;
 
 namespace MyGame
 {
@@ -16,7 +18,8 @@ namespace MyGame
         private int ProgresDamage;
         private int experience = 1;
         private Logger _log;
-        
+        private ActionGame _action;
+        private Random _random=new Random();
 
         public Player(Logger log)
         {        
@@ -74,6 +77,99 @@ namespace MyGame
             Console.WriteLine($" Игрок уровень:\t {Level}");
             Console.WriteLine($" \t жизни:\t {Health}\n");
         }
+        public Enemy? StatusPlayer( ref Enemy? enemy)
+        {
+            Console.WriteLine($" Состояние игрока: {(enemy is not null ? "в бою\n  " : "в покое\n")}");
+
+            HealthStatus();
+
+            if (enemy is not null)
+            {
+                enemy.EnemyHealthStatus();
+            }
+            return enemy;
+        }
+        public Enemy? PerformPlayerAction(ref Enemy? enemy, bool missChance,bool createEnemy,string action)
+        {           
+             action = Console.ReadLine();
+
+            if (enemy is null)            
+                _action.ActionSearch();            
+            else            
+                _action.ActionAttack();            
+
+            switch (action)
+            {
+                case "1":
+                    if (enemy is not null)
+                    {
+                        int chance = _random.Next(0, 100);
+                        if (missChance)
+                        {
+                            chance = 99;
+                        }
+
+                        if (chance > 20)
+                        {
+                            enemy.Hit(Damage);
+                            missChance = false;
+
+                            if (enemy.IsAlive is false)
+                            {
+                                GetExperience();
+                                UpdateDamageHealth();
+                                enemy = null;
+
+                                if (Experience > 2)
+                                {
+                                    UpdateExperience();
+                                }
+                            }
+                        }
+                        else
+                        {
+                            Miss();
+                            missChance = true;                            
+                        }
+                    }
+
+                    break;
+                case "2":
+                    if (enemy is not null)
+                    {
+                        int chance = _random.Next(0, 100);
+                        if (chance > 20)
+                        {
+                            EscapeLuck();
+                            enemy = null;
+                        }
+                        else
+                        {
+                            EscapeFalse();
+                        }
+                    }
+
+                    break;
+                case "3":
+                    if (enemy is null)
+                    {
+                        int chance = _random.Next(0, 100);
+
+                        if (chance > 20)
+                        {
+                            _action.EnemySearchLuck();
+                            createEnemy = true;
+                        }
+                        else
+                        {
+                            _action.EnemySearchFalse();
+                        }
+                    }
+                    break;
+            }
+            return enemy;
+        }
+        
     } 
    
 }

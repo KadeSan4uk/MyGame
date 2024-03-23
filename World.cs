@@ -8,7 +8,7 @@ namespace MyGame
 {
     public class World
     {
-        Random random = new Random();        
+        private Random random = new Random();        
         private Logger _log;        
         
         public World( Logger log)
