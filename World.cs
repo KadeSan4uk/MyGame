@@ -15,7 +15,7 @@
             _player = CreatePlayer();
         }
 
-        public bool IsRunning => true;
+        public bool IsRunning  {get; set;}
 
         public void PrintStatus()
         {
@@ -45,7 +45,7 @@
 
         public void PerformActorsActions()
         {
-            _player.PerformPlayerAction();
+            _player.PerformAction();
 
             if (_currentEnemy != null &&
                 _currentEnemy.TryHit(out var damage))
@@ -132,12 +132,14 @@
                 case "2":
                     Console.Clear();
                     Console.WriteLine($" Вышли из игры");
+                    IsRunning = false;
                     //exit = true;
                     break;
 
                 default:
                     Console.Clear();
                     Console.WriteLine($" Вышли из игры");
+                    IsRunning=false;
                     //exit = true;
                     break;
             }

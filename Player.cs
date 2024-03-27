@@ -107,7 +107,7 @@ namespace MyGame
             HealthStatus();
         }
 
-        public void PerformPlayerAction()
+        public void PerformAction()
         {
             var action = Console.ReadLine();
 
