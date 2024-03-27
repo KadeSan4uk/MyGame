@@ -1,4 +1,6 @@
-﻿namespace MyGame
+﻿using System.Text.RegularExpressions;
+
+namespace MyGame
 {
     public class Enemy
     {

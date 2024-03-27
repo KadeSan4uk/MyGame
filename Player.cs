@@ -52,7 +52,9 @@ namespace MyGame
 
         public void EscapeLuck()
         {       
-            _log.AddLog($" Побег удался");            
+            _log.AddLog($" Побег удался");
+            _currentEnemy = null;
+            SetEnemy(null);
         }
 
         public void EscapeFalse()
@@ -152,10 +154,8 @@ namespace MyGame
                     {
                         int chance = _random.Next(0, 100);
                         if (chance > 20)
-                        {
-                            
+                        {                            
                             EscapeLuck();
-                            
                         }
                         else
                         {

@@ -74,7 +74,7 @@
             return false;
         }
 
-        private void OnPlayerFindEnemy()
+        public void OnPlayerFindEnemy()
         {
             _currentEnemy = CreateEnemy();
             _player.SetEnemy(_currentEnemy);
