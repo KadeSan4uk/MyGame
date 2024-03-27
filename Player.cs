@@ -8,7 +8,6 @@ namespace MyGame
     {
         public event Action? FindEnemyEvent;
         public event Action? DiedEvent;
-        public event Action? OnEscape;
 
         private const int _Health = 400;
         private const int _Damage = 100;
@@ -23,7 +22,7 @@ namespace MyGame
         private Logger _log;
         private Random _random = new Random();
         private Enemy? _currentEnemy;
-        private bool missChance=false;
+        private bool missChance = false;
 
         public Player(Logger log)
         {
