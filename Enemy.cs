@@ -2,7 +2,7 @@
 {
     public class Enemy
     {
-        public event Action DieEvent;
+        public event Action? DieEvent;
 
         private const int _Health = 300;
         private const int _Damage = 100;

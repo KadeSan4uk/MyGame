@@ -6,8 +6,8 @@ namespace MyGame
 {
     public class Player
     {
-        public event Action FindEnemyEvent;
-        public event Action DiedEvent;
+        public event Action? FindEnemyEvent;
+        public event Action? DiedEvent;
 
         private const int _Health = 400;
         private const int _Damage = 100;
@@ -21,8 +21,8 @@ namespace MyGame
         private int ProgresDamage;
         private Logger _log;
         private Random _random = new Random();
-        private Enemy? _currentEnemy;
-        private bool missChance;
+        private Enemy? _currentEnemy;        
+        private bool missChance=false;
 
         public Player(Logger log)
         {
@@ -52,7 +52,9 @@ namespace MyGame
 
         public void EscapeLuck()
         {
-            _log.AddLog($" Побег удался");
+            _currentEnemy = null;
+            SetEnemy(null);
+            _log.AddLog($" Побег удался");           
         }
 
         public void EscapeFalse()
@@ -153,8 +155,9 @@ namespace MyGame
                         int chance = _random.Next(0, 100);
                         if (chance > 20)
                         {
+                            
                             EscapeLuck();
-                            _currentEnemy = null;
+                            
                         }
                         else
                         {
@@ -178,12 +181,9 @@ namespace MyGame
                             _log.AddLog($" Результат поиска: Никого");
                         }
                     }
-                    break;
-                    default: Console.WriteLine($"Не корректный ввод: Выберите 1), 2) или 3)");
-                    break;  
+                    break;                     
             }
         }
-
 
         public void SetEnemy(Enemy? enemy)
         {
