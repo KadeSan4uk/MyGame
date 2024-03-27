@@ -2,20 +2,18 @@
 {
     public class Enemy
     {
-        public event Action? DieEvent;
+        public event Action? DieEvent;       
 
         private const int _Health = 300;
         private const int _Damage = 100;
         private const int _Level = 1;
         private int Health;
         private int Damage;
-        private int Level;
-
-       
+        private int Level;       
 
         public bool IsAlive => Health > 0;
         public int DieExperience => 1;
-
+        
         private Logger _log;
         private Random _random = new();
 
@@ -57,10 +55,12 @@
             return false;
         }
 
-        public void HealthStatus()
-        {
-            Console.WriteLine($"  Враг уровень:\t {Level}");
-            Console.WriteLine($"   \t жизни:\t {Health}\n");
+        public void HealthStatus(Enemy? enemy)
+        {     if(enemy is not null)
+            {
+                Console.WriteLine($"  Враг уровень:\t {Level}");
+                Console.WriteLine($"   \t жизни:\t {Health}\n");                
+            }            
         }        
     }
 }

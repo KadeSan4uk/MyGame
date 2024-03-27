@@ -21,7 +21,7 @@
         public void PrintStatus()
         {
             _player.StatusPlayer();
-            _currentEnemy?.HealthStatus();
+            _currentEnemy?.HealthStatus(_currentEnemy);
 
         }
 
@@ -102,7 +102,7 @@
             return player;
         }
 
-        private Enemy CreateEnemy()
+        private Enemy? CreateEnemy()
         {
             var enemy = new Enemy(_log);
 

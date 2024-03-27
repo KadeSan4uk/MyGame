@@ -8,6 +8,7 @@ namespace MyGame
     {
         public event Action? FindEnemyEvent;
         public event Action? DiedEvent;
+        public event Action? OnEscape;
 
         private const int _Health = 400;
         private const int _Damage = 100;
@@ -21,7 +22,7 @@ namespace MyGame
         private int ProgresDamage;
         private Logger _log;
         private Random _random = new Random();
-        private Enemy? _currentEnemy;        
+        private Enemy? _currentEnemy;
         private bool missChance=false;
 
         public Player(Logger log)
@@ -51,10 +52,8 @@ namespace MyGame
         }
 
         public void EscapeLuck()
-        {
-            _currentEnemy = null;
-            SetEnemy(null);
-            _log.AddLog($" Побег удался");           
+        {       
+            _log.AddLog($" Побег удался");            
         }
 
         public void EscapeFalse()
@@ -138,7 +137,7 @@ namespace MyGame
 
                         if (chance > 20)
                         {
-                            _currentEnemy.Hit(Damage);
+                            _currentEnemy?.Hit(Damage);
                             missChance = false;
                         }
                         else
