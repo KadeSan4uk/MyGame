@@ -61,6 +61,6 @@
         {
             Console.WriteLine($"  Враг уровень:\t {Level}");
             Console.WriteLine($"   \t жизни:\t {Health}\n");
-        }
+        }        
     }
 }

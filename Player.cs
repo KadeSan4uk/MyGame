@@ -109,8 +109,6 @@ namespace MyGame
 
         public void PerformAction()
         {
-            var action = Console.ReadLine();
-
             if (_currentEnemy is null)
             {
                 Console.WriteLine($" Возможное действие:");
@@ -122,6 +120,8 @@ namespace MyGame
                 Console.WriteLine($" 1) = Атаковать");
                 Console.WriteLine($" 2) = Сбежать");
             }
+
+            var action = Console.ReadLine();
 
             switch (action)
             {
@@ -137,7 +137,7 @@ namespace MyGame
                         if (chance > 20)
                         {
                             _currentEnemy.Hit(Damage);
-                            missChance = false;                           
+                            missChance = false;
                         }
                         else
                         {
@@ -178,8 +178,9 @@ namespace MyGame
                             _log.AddLog($" Результат поиска: Никого");
                         }
                     }
-
                     break;
+                    default: Console.WriteLine($"Не корректный ввод: Выберите 1), 2) или 3)");
+                    break;  
             }
         }
 

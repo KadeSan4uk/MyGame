@@ -20,8 +20,9 @@
 
         public void PrintStatus()
         {
-            _currentEnemy?.HealthStatus();
             _player.StatusPlayer();
+            _currentEnemy?.HealthStatus();
+
         }
 
         public void PerformGlobalAction()
@@ -133,15 +134,13 @@
                 case "2":
                     Console.Clear();
                     Console.WriteLine($" Вышли из игры");
-                    IsRunning = true;
-                    //exit = true;
+                    IsRunning = true;                    
                     break;
 
                 default:
                     Console.Clear();
                     Console.WriteLine($" Вышли из игры");
-                    IsRunning=true;
-                    //exit = true;
+                    IsRunning=true;                    
                     break;
             }
         }
