@@ -8,14 +8,15 @@
         private Player _player;
         private Enemy? _currentEnemy;
         private int _currentRound = 1;
+        public bool IsRunning {get;set;}
 
         public World(Logger log)
         {
             _log = log;
-            _player = CreatePlayer();
+            _player = CreatePlayer();            
         }
 
-        public bool IsRunning  {get; set;}
+       
 
         public void PrintStatus()
         {
@@ -122,7 +123,7 @@
             switch (actionEsc)
             {
                 case "1":
-                    //currentRound = 0;
+                    _currentRound = 0;
                     Console.Clear();
                     _log.Clear();
                     _player = CreatePlayer();
@@ -132,14 +133,14 @@
                 case "2":
                     Console.Clear();
                     Console.WriteLine($" Вышли из игры");
-                    IsRunning = false;
+                    IsRunning = true;
                     //exit = true;
                     break;
 
                 default:
                     Console.Clear();
                     Console.WriteLine($" Вышли из игры");
-                    IsRunning=false;
+                    IsRunning=true;
                     //exit = true;
                     break;
             }
