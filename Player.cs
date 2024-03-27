@@ -5,7 +5,10 @@ using static System.Collections.Specialized.BitVector32;
 namespace MyGame
 {
     public class Player
-    {        
+    {
+        public event Action FindEnemyEvent;
+        public event Action DiedEvent;
+
         private const int _Health = 400;
         private const int _Damage = 100;
         private const int _Level = 1;
@@ -16,54 +19,71 @@ namespace MyGame
         public int Experience;
         private int ProgresHealth;
         private int ProgresDamage;
-        private int experience = 1;
         private Logger _log;
-        private ActionGame _action;
-        private Random _random=new Random();
+        private Random _random = new Random();
+        private Enemy? _currentEnemy;
+        private bool missChance;
 
         public Player(Logger log)
-        {        
+        {
             _log = log;
             Health = _Health;
             Damage = _Damage;
             Level = _Level;
             Experience = _Experience;
-        }        
+        }
 
         public void Hit(int damage)
         {
             Health -= damage;
 
-           _log.AddLog($" Враг нанес {damage} урона");
-        }                            
+            _log.AddLog($" Враг нанес {damage} урона");
+
+            if (Health <= 0)
+            {
+                DiedEvent?.Invoke();
+            }
+        }
+
         public void Miss()
         {
             _log.AddLog($" Игрок промахнулся");
         }
+
         public void EscapeLuck()
         {
             _log.AddLog($" Побег удался");
         }
+
         public void EscapeFalse()
         {
             _log.AddLog($" Неудачная попытка побега");
         }
-        public void ProgressDamageHealth(int damage,int health)
+
+        public void ProgressDamageHealth(int damage, int health)
         {
             ProgresDamage += damage;
-            ProgresHealth += health;                      
+            ProgresHealth += health;
         }
-        public void UpdateDamageHealth() 
+
+        public void UpdateDamageHealth()
         {
-            Health = _Health+ProgresHealth; 
-            Damage = _Damage+ProgresDamage;
-        } 
-        public void GetExperience()
+            Health = _Health + ProgresHealth;
+            Damage = _Damage + ProgresDamage;
+        }
+
+        public void UpdateExperience(int experience)
         {
             _log.AddLog($" Игрок получил {experience} опыта");
             Experience += experience;
+
+            if (Experience > 2)
+            {
+                LevelUp();
+            }
         }
-        public void UpdateExperience()
+
+        private void LevelUp()
         {
             Level++;
             _log.AddLog($" Игрок достиг {Level} уровня!");
@@ -72,36 +92,41 @@ namespace MyGame
             UpdateDamageHealth();
             Experience = 0;
         }
+
         public void HealthStatus()
         {
             Console.WriteLine($" Игрок уровень:\t {Level}");
             Console.WriteLine($" \t жизни:\t {Health}\n");
         }
-        public Enemy? StatusPlayer( ref Enemy? enemy)
+
+        public void StatusPlayer()
         {
-            Console.WriteLine($" Состояние игрока: {(enemy is not null ? "в бою\n  " : "в покое\n")}");
+            Console.WriteLine(
+                $" Состояние игрока: {(_currentEnemy is not null ? "в бою\n  " : "в покое\n")}");
 
             HealthStatus();
-
-            if (enemy is not null)
-            {
-                enemy.EnemyHealthStatus();
-            }
-            return enemy;
         }
-        public Enemy? PerformPlayerAction(ref Enemy? enemy, bool missChance,bool createEnemy,string action)
-        {           
-             action = Console.ReadLine();
 
-            if (enemy is null)            
-                _action.ActionSearch();            
-            else            
-                _action.ActionAttack();            
+        public void PerformPlayerAction()
+        {
+            var action = Console.ReadLine();
+
+            if (_currentEnemy is null)
+            {
+                Console.WriteLine($" Возможное действие:");
+                Console.WriteLine($" 3) = Искать врага");
+            }
+            else
+            {
+                Console.WriteLine($" Возможные действия:");
+                Console.WriteLine($" 1) = Атаковать");
+                Console.WriteLine($" 2) = Сбежать");
+            }
 
             switch (action)
             {
                 case "1":
-                    if (enemy is not null)
+                    if (_currentEnemy is not null)
                     {
                         int chance = _random.Next(0, 100);
                         if (missChance)
@@ -111,37 +136,25 @@ namespace MyGame
 
                         if (chance > 20)
                         {
-                            enemy.Hit(Damage);
-                            missChance = false;
-
-                            if (enemy.IsAlive is false)
-                            {
-                                GetExperience();
-                                UpdateDamageHealth();
-                                enemy = null;
-
-                                if (Experience > 2)
-                                {
-                                    UpdateExperience();
-                                }
-                            }
+                            _currentEnemy.Hit(Damage);
+                            missChance = false;                           
                         }
                         else
                         {
                             Miss();
-                            missChance = true;                            
+                            missChance = true;
                         }
                     }
 
                     break;
                 case "2":
-                    if (enemy is not null)
+                    if (_currentEnemy is not null)
                     {
                         int chance = _random.Next(0, 100);
                         if (chance > 20)
                         {
                             EscapeLuck();
-                            enemy = null;
+                            _currentEnemy = null;
                         }
                         else
                         {
@@ -151,25 +164,29 @@ namespace MyGame
 
                     break;
                 case "3":
-                    if (enemy is null)
+                    if (_currentEnemy is null)
                     {
                         int chance = _random.Next(0, 100);
 
                         if (chance > 20)
                         {
-                            _action.EnemySearchLuck();
-                            createEnemy = true;
+                            _log.AddLog($" Результат поиска: Враг найден!");
+                            FindEnemyEvent?.Invoke();
                         }
                         else
                         {
-                            _action.EnemySearchFalse();
+                            _log.AddLog($" Результат поиска: Никого");
                         }
                     }
+
                     break;
             }
-            return enemy;
         }
-        
-    } 
-   
+
+
+        public void SetEnemy(Enemy? enemy)
+        {
+            _currentEnemy = enemy;
+        }
+    }
 }
