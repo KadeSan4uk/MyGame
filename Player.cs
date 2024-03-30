@@ -7,41 +7,41 @@ namespace MyGame
     public class Player
     {
         public event Action? FindEnemyEvent;
-        public event Action? DiedEvent;
+        public event Action? DiedEventPlayer;
 
-        private const int _Health = 400;
-        private const int _Damage = 100;
-        private const int _Level = 1;
-        private const int _Experience = 0;
-        public int Health;
-        public int Damage;
-        public int Level;
-        public int Experience;
-        private int ProgresHealth;
-        private int ProgresDamage;
+        private const int Health = 400;
+        private const int Damage = 100;
+        private const int Level = 1;
+        private const int Experience = 0;
+        private int _health;
+        private int _damage;
+        private int _level;
+        private int _experience;
+        private int _progresHealth;
+        private int _progresDamage;
         private Logger _log;
         private Random _random = new Random();
-        private Enemy? _currentEnemy;
-        private bool missChance = false;
+        private Enemy? _enemy;
+        private bool _missChance = false;
 
         public Player(Logger log)
         {
             _log = log;
-            Health = _Health;
-            Damage = _Damage;
-            Level = _Level;
-            Experience = _Experience;
+            _health = Health;
+            _damage = Damage;
+            _level = Level;
+            _experience = Experience;
         }
 
         public void Hit(int damage)
         {
-            Health -= damage;
+            _health -= damage;
 
             _log.AddLog($" Враг нанес {damage} урона");
 
-            if (Health <= 0)
+            if (_health <= 0)
             {
-                DiedEvent?.Invoke();
+                DiedEventPlayer?.Invoke();
             }
         }
 
@@ -53,7 +53,7 @@ namespace MyGame
         public void EscapeLuck()
         {       
             _log.AddLog($" Побег удался");
-            _currentEnemy = null;
+            _enemy = null;
             SetEnemy(null);
         }
 
@@ -64,22 +64,22 @@ namespace MyGame
 
         public void ProgressDamageHealth(int damage, int health)
         {
-            ProgresDamage += damage;
-            ProgresHealth += health;
+            _progresDamage += damage;
+            _progresHealth += health;
         }
 
         public void UpdateDamageHealth()
         {
-            Health = _Health + ProgresHealth;
-            Damage = _Damage + ProgresDamage;
+            _health = Health + _progresHealth;
+            _damage = Damage + _progresDamage;
         }
 
         public void UpdateExperience(int experience)
         {
             _log.AddLog($" Игрок получил {experience} опыта");
-            Experience += experience;
+            _experience += experience;
 
-            if (Experience > 2)
+            if (_experience > 2)
             {
                 LevelUp();
             }
@@ -87,31 +87,31 @@ namespace MyGame
 
         private void LevelUp()
         {
-            Level++;
-            _log.AddLog($" Игрок достиг {Level} уровня!");
+            _level++;
+            _log.AddLog($" Игрок достиг {_level} уровня!");
             _log.AddLog($" Жизни + 50, Урон + 50");
             ProgressDamageHealth(50, 50);
             UpdateDamageHealth();
-            Experience = 0;
+            _experience = 0;
         }
 
         public void HealthStatus()
         {
-            Console.WriteLine($" Игрок уровень:\t {Level}");
-            Console.WriteLine($" \t жизни:\t {Health}\n");
+            Console.WriteLine($" Игрок уровень:\t {_level}");
+            Console.WriteLine($" \t жизни:\t {_health}\n");
         }
 
         public void StatusPlayer()
         {
             Console.WriteLine(
-                $" Состояние игрока: {(_currentEnemy is not null ? "в бою\n  " : "в покое\n")}");
+                $" Состояние игрока: {(_enemy is not null ? "в бою\n  " : "в покое\n")}");
 
             HealthStatus();
         }
 
         public void PerformAction()
         {
-            if (_currentEnemy is null)
+            if (_enemy is null)
             {
                 Console.WriteLine($" Возможное действие:");
                 Console.WriteLine($" 3) = Искать врага");
@@ -128,33 +128,33 @@ namespace MyGame
             switch (action)
             {
                 case "1":
-                    if (_currentEnemy is not null)
+                    if (_enemy is not null)
                     {
                         int chance = _random.Next(0, 100);
-                        if (missChance)
+                        if (_missChance)
                         {
                             chance = 99;
                         }
 
                         if (chance > 20)
                         {
-                            _currentEnemy?.Hit(Damage);
-                            missChance = false;
+                            _enemy?.Hit(_damage);
+                            _missChance = false;
                         }
                         else
                         {
                             Miss();
-                            missChance = true;
+                            _missChance = true;
                         }
                     }
 
                     break;
                 case "2":
-                    if (_currentEnemy is not null)
+                    if (_enemy is not null)
                     {
                         int chance = _random.Next(0, 100);
                         if (chance > 20)
-                        {                            
+                       {                            
                             EscapeLuck();
                         }
                         else
@@ -165,7 +165,7 @@ namespace MyGame
 
                     break;
                 case "3":
-                    if (_currentEnemy is null)
+                    if (_enemy is null)
                     {
                         int chance = _random.Next(0, 100);
 
@@ -185,7 +185,7 @@ namespace MyGame
 
         public void SetEnemy(Enemy? enemy)
         {
-            _currentEnemy = enemy;
+            _enemy = enemy;
         }
     }
 }

@@ -2,7 +2,7 @@
 {
     public class Logger
     {
-        private const int maxLogElements = 10;
+        private const int MaxLogElements = 10;
         private Queue<string> _queue;
         private Action<string> _printAction;
 
@@ -17,13 +17,13 @@
         {
             _queue.Enqueue(log);
 
-            while (_queue.Count > maxLogElements)
+            while (_queue.Count > MaxLogElements)
                 _queue.Dequeue();
         }
 
         public void ShowLog()
         {
-            while (_queue.Count > maxLogElements)
+            while (_queue.Count > MaxLogElements)
                 _queue.Dequeue();
 
             foreach (var str in _queue)

@@ -4,23 +4,23 @@ namespace MyGame
 {
     public class Program
     {
-        private static World? world;
-        private static Logger? logger;
+        private static World? _world;
+        private static Logger? _logger;
         
 
         public static void Main(string[] args)
         {           
-            logger = new Logger(Console.WriteLine);
-            world = new World(logger);
+            _logger = new Logger(Console.WriteLine);
+            _world = new World(_logger);
 
-            while (!world.IsRunning)
+            while (!_world.IsRunning)
             {
                 Console.Clear();
-                logger.ShowLog();
-                world.PerformGlobalAction();
-                world.PrintStatus();
-                world.PerformActorsActions();
-                world.NextTurn();
+                _logger.ShowLog();
+                _world.PerformGlobalAction();
+                _world.PrintStatus();
+                _world.PerformActorsActions();
+                _world.NextTurn();
             }
         }
     }

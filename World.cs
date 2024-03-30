@@ -6,7 +6,7 @@
         private Logger _log;
 
         private Player _player;
-        private Enemy? _currentEnemy;
+        private Enemy? _enemy;
         private int _currentRound = 1;
         public bool IsRunning {get;set;}
 
@@ -21,8 +21,7 @@
         public void PrintStatus()
         {
             _player.StatusPlayer();
-            _currentEnemy?.HealthStatus(_currentEnemy);
-
+            _enemy?.HealthStatus(_enemy);
         }
 
         public void PerformGlobalAction()
@@ -30,12 +29,12 @@
             Console.WriteLine();
             Console.WriteLine($" \t <=== Ход {_currentRound} ===>");
 
-            if (_currentEnemy is null)
+            if (_enemy is null)
             {
                 if (TryGenerateNewEnemy(out var newEnemy))
                 {
-                    _currentEnemy = newEnemy;
-                    _player.SetEnemy(_currentEnemy);
+                    _enemy = newEnemy;
+                    _player.SetEnemy(_enemy);
                     Console.WriteLine($" В дверях вашей лочуги появился враг!");
                 }
                 else
@@ -47,13 +46,14 @@
 
         public void PerformActorsActions()
         {
-            _player.PerformAction();
+            //_player.PerformAction();
 
-            if (_currentEnemy != null &&
-                _currentEnemy.TryHit(out var damage))
-            {
-                _player.Hit(damage);
-            }
+            //if (_enemy != null &&
+            //    _enemy.TryHit(out var damage))
+            //{
+            //    _player.Hit(damage);
+            //}
+
         }
 
         public void NextTurn() =>
@@ -76,19 +76,19 @@
 
         public void OnPlayerFindEnemy()
         {
-            _currentEnemy = CreateEnemy();
-            _player.SetEnemy(_currentEnemy);
+            _enemy = CreateEnemy();
+            _player.SetEnemy(_enemy);
         }
 
         private void OnEnemyDie()
         {
-            if (_currentEnemy != null)
+            if (_enemy != null)
             {
-                _player.UpdateExperience(_currentEnemy.DieExperience);
+                _player.UpdateExperience(_enemy.DieExperience);
                 _player.UpdateDamageHealth();
             }
 
-            _currentEnemy = null;
+            _enemy = null;
             _player.SetEnemy(null);
         }
 
@@ -96,7 +96,7 @@
         {
             var player = new Player(_log);
 
-            player.DiedEvent += OnPlayerDied;
+            player.DiedEventPlayer += OnPlayerDied;
             player.FindEnemyEvent += OnPlayerFindEnemy;
 
             return player;
@@ -106,7 +106,7 @@
         {
             var enemy = new Enemy(_log);
 
-            enemy.DieEvent += OnEnemyDie;
+            enemy.DiedEventEnemy += OnEnemyDie;
 
             return enemy;
         }
@@ -128,7 +128,7 @@
                     Console.Clear();
                     _log.Clear();
                     _player = CreatePlayer();
-                    _currentEnemy = null;
+                    _enemy = null;
                     break;
 
                 case "2":

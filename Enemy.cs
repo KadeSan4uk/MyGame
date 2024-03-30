@@ -4,16 +4,16 @@ namespace MyGame
 {
     public class Enemy
     {
-        public event Action? DieEvent;       
+        public event Action? DiedEventEnemy;       
 
-        private const int _Health = 300;
-        private const int _Damage = 100;
-        private const int _Level = 1;
-        private int Health;
-        private int Damage;
-        private int Level;       
+        private const int Health = 300;
+        private const int Damage = 100;
+        private const int Level = 1;
+        private int _health;
+        private int _damage;
+        private int _level;       
 
-        public bool IsAlive => Health > 0;
+        private bool _isAlive => _health > 0;
         public int DieExperience => 1;
         
         private Logger _log;
@@ -22,23 +22,23 @@ namespace MyGame
         public Enemy(Logger log)
         {
             _log = log;
-            Health = _Health;
-            Damage = _Damage;
-            Level = _Level;
+            _health = Health;
+            _damage = Damage;
+            _level = Level;
         }
 
         public void Hit(int damage)
         {
-            Health -= damage;
+            _health -= damage;
 
-            if (IsAlive)
+            if (_isAlive)
             {
                 _log.AddLog($" Игрок нанес {damage} урона");
             }
             else
             {
                 _log.AddLog($" Игрок нанес {damage} урона, враг погиб.");
-                DieEvent?.Invoke();
+                DiedEventEnemy?.Invoke();
             }
         }
 
@@ -48,7 +48,7 @@ namespace MyGame
 
             if (chance > 20)
             {
-                damage = Damage;
+                damage = _damage;
                 return true;
             }
 
@@ -60,8 +60,8 @@ namespace MyGame
         public void HealthStatus(Enemy? enemy)
         {     if(enemy is not null)
             {
-                Console.WriteLine($"  Враг уровень:\t {Level}");
-                Console.WriteLine($"   \t жизни:\t {Health}\n");                
+                Console.WriteLine($"  Враг уровень:\t {_level}");
+                Console.WriteLine($"   \t жизни:\t {_health}\n");                
             }            
         }        
     }
