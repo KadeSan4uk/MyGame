@@ -153,7 +153,7 @@ namespace MyGame
                         int chance = _random.Next(0, 100);
                         if (chance > 20)
                         {                            
-                            EscapeLuck();
+                            EscapeLuck();                            
                         }
                         else
                         {
