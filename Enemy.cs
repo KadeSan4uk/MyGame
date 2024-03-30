@@ -11,8 +11,8 @@ namespace MyGame
         private const int Level = 1;
         private int _health;
         private int _damage;
-        private int _level;       
-
+        private int _level; 
+        
         private bool _isAlive => _health > 0;
         public int DieExperience => 1;
         
@@ -20,14 +20,14 @@ namespace MyGame
         private Random _random = new();
 
         public Enemy(Logger log)
-        {
+        {            
             _log = log;
             _health = Health;
             _damage = Damage;
             _level = Level;
         }
 
-        public void Hit(int damage)
+        public void TakeDamage(int damage)
         {
             _health -= damage;
 
@@ -42,7 +42,7 @@ namespace MyGame
             }
         }
 
-        public bool TryHit(out int damage)
+        public bool TryGiveDamage(out int damage)
         {
             int chance = _random.Next(0, 100);
 
@@ -57,12 +57,10 @@ namespace MyGame
             return false;
         }
 
-        public void HealthStatus(Enemy? enemy)
-        {     if(enemy is not null)
-            {
-                Console.WriteLine($"  Враг уровень:\t {_level}");
-                Console.WriteLine($"   \t жизни:\t {_health}\n");                
-            }            
+        public void HealthStatus()
+        {                 
+            Console.WriteLine($"  Враг уровень:\t {_level}");
+            Console.WriteLine($"   \t жизни:\t {_health}\n");                                      
         }        
     }
 }

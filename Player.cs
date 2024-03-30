@@ -17,8 +17,8 @@ namespace MyGame
         private int _damage;
         private int _level;
         private int _experience;
-        private int _progresHealth;
-        private int _progresDamage;
+        private int _upHealth;
+        private int _upDamage;
         private Logger _log;
         private Random _random = new Random();
         private Enemy? _enemy;
@@ -33,7 +33,7 @@ namespace MyGame
             _experience = Experience;
         }
 
-        public void Hit(int damage)
+        public void TakeDamage(int damage)
         {
             _health -= damage;
 
@@ -53,8 +53,6 @@ namespace MyGame
         public void EscapeLuck()
         {       
             _log.AddLog($" Побег удался");
-            _enemy = null;
-            SetEnemy(null);
         }
 
         public void EscapeFalse()
@@ -62,19 +60,19 @@ namespace MyGame
             _log.AddLog($" Неудачная попытка побега");
         }
 
-        public void ProgressDamageHealth(int damage, int health)
+        public void UpDamageHealth(int damage, int health)
         {
-            _progresDamage += damage;
-            _progresHealth += health;
+            _upDamage += damage;
+            _upHealth += health;
         }
 
-        public void UpdateDamageHealth()
+        public void RestorHealthDamage()
         {
-            _health = Health + _progresHealth;
-            _damage = Damage + _progresDamage;
+            _health = Health + _upHealth;
+            _damage = Damage + _upDamage;
         }
 
-        public void UpdateExperience(int experience)
+        public void UpExperience(int experience)
         {
             _log.AddLog($" Игрок получил {experience} опыта");
             _experience += experience;
@@ -90,8 +88,8 @@ namespace MyGame
             _level++;
             _log.AddLog($" Игрок достиг {_level} уровня!");
             _log.AddLog($" Жизни + 50, Урон + 50");
-            ProgressDamageHealth(50, 50);
-            UpdateDamageHealth();
+            UpDamageHealth(50, 50);
+            RestorHealthDamage();
             _experience = 0;
         }
 
@@ -138,7 +136,7 @@ namespace MyGame
 
                         if (chance > 20)
                         {
-                            _enemy?.Hit(_damage);
+                            _enemy?.TakeDamage(_damage);
                             _missChance = false;
                         }
                         else
@@ -154,7 +152,7 @@ namespace MyGame
                     {
                         int chance = _random.Next(0, 100);
                         if (chance > 20)
-                       {                            
+                        {                            
                             EscapeLuck();
                         }
                         else

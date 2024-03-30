@@ -13,15 +13,15 @@
         public World(Logger log)
         {
             _log = log;
-            _player = CreatePlayer();            
+            _player = CreatePlayer();   
         }
 
        
 
         public void PrintStatus()
         {
-            _player.StatusPlayer();
-            _enemy?.HealthStatus(_enemy);
+            _player.StatusPlayer(); 
+            _enemy?.HealthStatus(_enemy);            
         }
 
         public void PerformGlobalAction()
@@ -46,7 +46,7 @@
 
         public void PerformActorsActions()
         {
-            //_player.PerformAction();
+            _player.PerformAction();
 
             //if (_enemy != null &&
             //    _enemy.TryHit(out var damage))
@@ -84,8 +84,8 @@
         {
             if (_enemy != null)
             {
-                _player.UpdateExperience(_enemy.DieExperience);
-                _player.UpdateDamageHealth();
+                _player.UpExperience(_enemy.DieExperience);
+                _player.RestorHealthDamage();
             }
 
             _enemy = null;
