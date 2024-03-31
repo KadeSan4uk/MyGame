@@ -42,7 +42,7 @@ namespace MyGame
             }
         }
 
-        public bool TryGiveDamage(out int damage)
+        public bool TryHit(out int damage)
         {
             int chance = _random.Next(0, 100);
 

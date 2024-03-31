@@ -4,13 +4,11 @@ namespace MyGame
 {
     public class World
     {
-        private Random _random = new ();
         private Logger _log;
-
         private Player _player;
         private Enemy? _enemy;
+        private Random _random=new();
         private int _currentRound = 1;
-        private bool _missChance=false;
         public bool IsRunning {get;set;}
 
         public World(Logger log)
@@ -66,27 +64,15 @@ namespace MyGame
                 case "1":
                     if (_enemy is not null)
                     {
-                        if (_enemy != null &&
-                             _enemy.TryGiveDamage(out var damage))
+                        if (_enemy.TryHit(out var damage))
                         {
                             _player.TakeDamage(damage);
-                        }
-                        int chance = _random.Next(0, 100);
-                        if (_missChance)
-                        {
-                            chance = 99;
-                        }
+                        }                       
 
-                        if (chance > 20)
+                        if (_player.TryHit(out damage))
                         {
-                            _enemy?.TakeDamage(_player._damage);
-                            _missChance = false;
-                        }
-                        else
-                        {
-                            _player.Miss();
-                            _missChance = true;
-                        }
+                            _enemy?.TakeDamage(damage);                            
+                        }                        
                     }
 
                     break;

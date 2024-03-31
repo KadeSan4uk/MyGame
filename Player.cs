@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Numerics;
+using static System.Net.Mime.MediaTypeNames;
 using static System.Collections.Specialized.BitVector32;
 
 namespace MyGame
@@ -14,13 +15,15 @@ namespace MyGame
         private const int Level = 1;
         private const int Experience = 0;
         private int _health;
-        public int _damage;
+        private int _damage;
         private int _level;
         private int _experience;
         private int _upHealth;
         private int _upDamage;
         private Logger _log;
         private Enemy? _enemy;
+        private Random _random = new();
+
 
         public Player(Logger log)
         {
@@ -29,7 +32,7 @@ namespace MyGame
             _damage = Damage;
             _level = Level;
             _experience = Experience;
-        }
+        }        
 
         public void TakeDamage(int damage)
         {
@@ -41,6 +44,21 @@ namespace MyGame
             {
                 DiedEventPlayer?.Invoke();
             }
+        }
+
+        public bool TryHit(out int damage)
+        {
+            int chance = _random.Next(0, 100);
+
+            if (chance > 20)
+            {
+                damage = _damage;
+                return true;
+            }
+
+            _log.AddLog($" Игрок промахнулся");
+            damage = 0;
+            return false;
         }
 
         public void Miss()
@@ -104,12 +122,7 @@ namespace MyGame
                 $" Состояние игрока: {(_enemy is not null ? "в бою\n  " : "в покое\n")}");
 
             HealthStatus();
-        }
-
-        public void PerformAction()
-        {
-            
-        }
+        }       
 
         public void SetEnemy(Enemy? enemy)
         {
