@@ -21,7 +21,7 @@ namespace MyGame
         private int _upHealth;
         private int _upDamage;
         private Logger _log;
-        private Enemy? _enemy;
+        public Enemy? Enemy { get; set; }
         private Random _random = new();
 
 
@@ -45,8 +45,7 @@ namespace MyGame
                 DiedEventPlayer?.Invoke();
             }
         }
-
-        public bool TryHit(out int damage)
+        public  bool TryHit(out int damage)
         {
             int chance = _random.Next(0, 100);
 
@@ -119,14 +118,14 @@ namespace MyGame
         public void StatusPlayer()
         {
             Console.WriteLine(
-                $" Состояние игрока: {(_enemy is not null ? "в бою\n  " : "в покое\n")}");
+                $" Состояние игрока: {(Enemy is not null ? "в бою\n  " : "в покое\n")}");
 
             HealthStatus();
         }       
 
         public void SetEnemy(Enemy? enemy)
         {
-            _enemy = enemy;
+            Enemy = enemy;
         }
     }
 }

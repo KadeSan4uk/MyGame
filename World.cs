@@ -5,8 +5,7 @@ namespace MyGame
     public class World
     {
         private Logger _log;
-        private Player _player;
-        private Enemy? _enemy;
+        private Player _player;        
         private Random _random=new();
         private int _currentRound = 1;
         public bool IsRunning {get;set;}
@@ -20,7 +19,7 @@ namespace MyGame
         public void PrintStatus()
         {
             _player.StatusPlayer(); 
-            _enemy?.HealthStatus();            
+            _player.Enemy?.HealthStatus();            
         }
 
         public void PerformGlobalAction()
@@ -28,12 +27,12 @@ namespace MyGame
             Console.WriteLine();
             Console.WriteLine($" \t <=== Ход {_currentRound} ===>");
 
-            if (_enemy is null)
+            if (_player.Enemy is null)
             {
                 if (TryGenerateNewEnemy(out var newEnemy))
                 {
-                    _enemy = newEnemy;
-                    _player.SetEnemy(_enemy);
+                    _player.Enemy = newEnemy;
+                    _player.SetEnemy(_player.Enemy);
                     Console.WriteLine($" В дверях вашей лочуги появился враг!");
                 }
                 else
@@ -45,7 +44,7 @@ namespace MyGame
 
         public void PerformActorsActions()
         {
-            if (_enemy is null)
+            if (_player.Enemy is null)
             {
                 Console.WriteLine($" Возможное действие:");
                 Console.WriteLine($" 3) = Искать врага");
@@ -62,28 +61,27 @@ namespace MyGame
             switch (action)
             {
                 case "1":
-                    if (_enemy is not null)
+                    if (_player.Enemy is not null)
                     {
-                        if (_enemy.TryHit(out var damage))
+                        if (_player.Enemy.TryHit(out var damage))
                         {
                             _player.TakeDamage(damage);
                         }                       
 
                         if (_player.TryHit(out damage))
                         {
-                            _enemy?.TakeDamage(damage);                            
+                            _player.Enemy?.TakeDamage(damage);                            
                         }                        
                     }
 
                     break;
                 case "2":
-                    if (_enemy is not null)
+                    if (_player.Enemy is not null)
                     {
                         int chance = _random.Next(0, 100);
                         if (chance > 20)
                         {
-                            _player.EscapeLuck();
-                            _enemy = null;
+                            _player.EscapeLuck();                           
                         }
                         else
                         {
@@ -93,15 +91,15 @@ namespace MyGame
 
                     break;
                 case "3":
-                    if (_enemy is null)
+                    if (_player.Enemy is null)
                     {
                         int chance = _random.Next(0, 100);
 
                         if (chance > 20)
                         {
                             _log.AddLog($" Результат поиска: Враг найден!");
-                            _enemy = CreateEnemy();
-                            _player.SetEnemy(_enemy);
+                            _player.Enemy = CreateEnemy();
+                            _player.SetEnemy(_player.Enemy);
                         }
                         else
                         {
@@ -132,19 +130,19 @@ namespace MyGame
 
         public void OnPlayerFindEnemy()
         {
-            _enemy = CreateEnemy();
-            _player.SetEnemy(_enemy);
+            _player.Enemy = CreateEnemy();
+            _player.SetEnemy(_player.Enemy);
         }
 
         private void OnEnemyDie()
         {
-            if (_enemy != null)
+            if (_player.Enemy != null)
             {
-                _player.UpExperience(_enemy.DieExperience);
+                _player.UpExperience(_player.Enemy.DieExperience);
                 _player.RestorHealthDamage();
             }
 
-            _enemy = null;
+            _player.Enemy = null;
             _player.SetEnemy(null);
         }
 
@@ -184,7 +182,7 @@ namespace MyGame
                     Console.Clear();
                     _log.Clear();
                     _player = CreatePlayer();
-                    _enemy = null;
+                    _player.Enemy = null;
                     break;
 
                 case "2":
