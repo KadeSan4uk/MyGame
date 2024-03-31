@@ -14,7 +14,7 @@ namespace MyGame
         private const int Level = 1;
         private const int Experience = 0;
         private int _health;
-        private int _damage;
+        public int _damage;
         private int _level;
         private int _experience;
         private int _upHealth;
@@ -109,76 +109,7 @@ namespace MyGame
 
         public void PerformAction()
         {
-            if (_enemy is null)
-            {
-                Console.WriteLine($" Возможное действие:");
-                Console.WriteLine($" 3) = Искать врага");
-            }
-            else
-            {
-                Console.WriteLine($" Возможные действия:");
-                Console.WriteLine($" 1) = Атаковать");
-                Console.WriteLine($" 2) = Сбежать");
-            }
-
-            var action = Console.ReadLine();
-
-            switch (action)
-            {
-                case "1":
-                    if (_enemy is not null)
-                    {
-                        int chance = _random.Next(0, 100);
-                        if (_missChance)
-                        {
-                            chance = 99;
-                        }
-
-                        if (chance > 20)
-                        {
-                            _enemy?.TakeDamage(_damage);
-                            _missChance = false;
-                        }
-                        else
-                        {
-                            Miss();
-                            _missChance = true;
-                        }
-                    }
-
-                    break;
-                case "2":
-                    if (_enemy is not null)
-                    {
-                        int chance = _random.Next(0, 100);
-                        if (chance > 20)
-                        {                            
-                            EscapeLuck();                            
-                        }
-                        else
-                        {
-                            EscapeFalse();
-                        }
-                    }
-
-                    break;
-                case "3":
-                    if (_enemy is null)
-                    {
-                        int chance = _random.Next(0, 100);
-
-                        if (chance > 20)
-                        {
-                            _log.AddLog($" Результат поиска: Враг найден!");
-                            FindEnemyEvent?.Invoke();
-                        }
-                        else
-                        {
-                            _log.AddLog($" Результат поиска: Никого");
-                        }
-                    }
-                    break;                     
-            }
+            
         }
 
         public void SetEnemy(Enemy? enemy)

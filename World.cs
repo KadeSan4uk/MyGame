@@ -1,13 +1,16 @@
-﻿namespace MyGame
+﻿using System;
+
+namespace MyGame
 {
     public class World
     {
-        private Random random = new Random();
+        private Random _random = new Random();
         private Logger _log;
 
         private Player _player;
         private Enemy? _enemy;
         private int _currentRound = 1;
+        private bool _missChance=false;
         public bool IsRunning {get;set;}
 
         public World(Logger log)
@@ -46,7 +49,78 @@
 
         public void PerformActorsActions()
         {
-            _player.PerformAction();
+            if (_enemy is null)
+            {
+                Console.WriteLine($" Возможное действие:");
+                Console.WriteLine($" 3) = Искать врага");
+            }
+            else
+            {
+                Console.WriteLine($" Возможные действия:");
+                Console.WriteLine($" 1) = Атаковать");
+                Console.WriteLine($" 2) = Сбежать");
+            }
+
+            var action = Console.ReadLine();
+
+            switch (action)
+            {
+                case "1":
+                    if (_enemy is not null)
+                    {
+                        int chance = _random.Next(0, 100);
+                        if (_missChance)
+                        {
+                            chance = 99;
+                        }
+
+                        if (chance > 20)
+                        {
+                            _enemy?.TakeDamage(_player._damage);
+                            _missChance = false;
+                        }
+                        else
+                        {
+                            _player.Miss();
+                            _missChance = true;
+                        }
+                    }
+
+                    break;
+                case "2":
+                    if (_enemy is not null)
+                    {
+                        int chance = _random.Next(0, 100);
+                        if (chance > 20)
+                        {
+                            _player.EscapeLuck();
+                            _enemy = null;
+                        }
+                        else
+                        {
+                            _player.EscapeFalse();
+                        }
+                    }
+
+                    break;
+                case "3":
+                    if (_enemy is null)
+                    {
+                        int chance = _random.Next(0, 100);
+
+                        if (chance > 20)
+                        {
+                            _log.AddLog($" Результат поиска: Враг найден!");
+                            _enemy = CreateEnemy();
+                            _player.SetEnemy(_enemy);
+                        }
+                        else
+                        {
+                            _log.AddLog($" Результат поиска: Никого");
+                        }
+                    }
+                    break;
+            }
 
             //if (_enemy != null &&
             //    _enemy.TryHit(out var damage))
@@ -61,7 +135,7 @@
 
         private bool TryGenerateNewEnemy(out Enemy? enemy)
         {
-            int chance = random.Next(0, 100);
+            int chance = _random.Next(0, 100);
 
             if (chance > 50)
             {
