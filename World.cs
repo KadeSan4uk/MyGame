@@ -21,7 +21,7 @@
         public void PrintStatus()
         {
             _player.StatusPlayer(); 
-            _enemy?.HealthStatus(_enemy);            
+            _enemy?.HealthStatus();            
         }
 
         public void PerformGlobalAction()
