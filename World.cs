@@ -4,7 +4,7 @@ namespace MyGame
 {
     public class World
     {
-        private Random _random = new Random();
+        private Random _random = new ();
         private Logger _log;
 
         private Player _player;
@@ -17,9 +17,7 @@ namespace MyGame
         {
             _log = log;
             _player = CreatePlayer();   
-        }
-
-       
+        }       
 
         public void PrintStatus()
         {
@@ -68,6 +66,11 @@ namespace MyGame
                 case "1":
                     if (_enemy is not null)
                     {
+                        if (_enemy != null &&
+                             _enemy.TryGiveDamage(out var damage))
+                        {
+                            _player.TakeDamage(damage);
+                        }
                         int chance = _random.Next(0, 100);
                         if (_missChance)
                         {
@@ -121,13 +124,6 @@ namespace MyGame
                     }
                     break;
             }
-
-            //if (_enemy != null &&
-            //    _enemy.TryHit(out var damage))
-            //{
-            //    _player.Hit(damage);
-            //}
-
         }
 
         public void NextTurn() =>

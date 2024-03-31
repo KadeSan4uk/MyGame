@@ -20,9 +20,7 @@ namespace MyGame
         private int _upHealth;
         private int _upDamage;
         private Logger _log;
-        private Random _random = new Random();
         private Enemy? _enemy;
-        private bool _missChance = false;
 
         public Player(Logger log)
         {
@@ -51,8 +49,9 @@ namespace MyGame
         }
 
         public void EscapeLuck()
-        {       
+        {                   
             _log.AddLog($" Побег удался");
+            RestorHealthDamage();                         
         }
 
         public void EscapeFalse()
