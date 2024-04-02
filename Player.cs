@@ -68,7 +68,7 @@ namespace MyGame
         public void EscapeLuck()
         {                   
             _log.AddLog($" Побег удался");
-            RestorHealthDamage();                         
+            RestorHealthDamage();            
         }
 
         public void EscapeFalse()

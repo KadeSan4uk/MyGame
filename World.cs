@@ -81,7 +81,8 @@ namespace MyGame
                         int chance = _random.Next(0, 100);
                         if (chance > 20)
                         {
-                            _player.EscapeLuck();                           
+                            _player.EscapeLuck();
+                            _player.Enemy = null;
                         }
                         else
                         {
