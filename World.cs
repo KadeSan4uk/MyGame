@@ -1,9 +1,9 @@
-﻿using System;
-
+﻿
 namespace MyGame
 {
-    public class World
+    public class World 
     {
+        private InputPlayer _inputPlayer;                        
         private Logger _log;
         private Player _player;        
         private Random _random=new();
@@ -44,68 +44,28 @@ namespace MyGame
 
         public void PerformActorsActions()
         {
-            if (_player.Enemy is null)
-            {
-                Console.WriteLine($" Возможное действие:");
-                Console.WriteLine($" 3) = Искать врага");
-            }
-            else
-            {
-                Console.WriteLine($" Возможные действия:");
-                Console.WriteLine($" 1) = Атаковать");
-                Console.WriteLine($" 2) = Сбежать");
-            }
+            _inputPlayer = new InputPlayer();
 
-            var action = Console.ReadLine();
+            InputPlayer.PlayerAction action = _inputPlayer.GetPlayerAction(_player);
 
             switch (action)
             {
-                case "1":
+                case InputPlayer.PlayerAction.Hit:
                     if (_player.Enemy is not null)
                     {
-                        if (_player.Enemy.TryHit(out var damage))
-                        {
-                            _player.TakeDamage(damage);
-                        }                       
-
-                        if (_player.TryHit(out damage))
-                        {
-                            _player.Enemy?.TakeDamage(damage);                            
-                        }                        
+                        BattleActors();                                                                  
                     }
-
                     break;
-                case "2":
+                case InputPlayer.PlayerAction.Escape:
                     if (_player.Enemy is not null)
                     {
-                        int chance = _random.Next(0, 100);
-                        if (chance > 20)
-                        {
-                            _player.EscapeLuck();
-                            _player.Enemy = null;
-                        }
-                        else
-                        {
-                            _player.EscapeFalse();
-                        }
+                        _player.TryEscape();
                     }
-
                     break;
-                case "3":
+                case InputPlayer.PlayerAction.Search:
                     if (_player.Enemy is null)
                     {
-                        int chance = _random.Next(0, 100);
-
-                        if (chance > 20)
-                        {
-                            _log.AddLog($" Результат поиска: Враг найден!");
-                            _player.Enemy = CreateEnemy();
-                            _player.SetEnemy(_player.Enemy);
-                        }
-                        else
-                        {
-                            _log.AddLog($" Результат поиска: Никого");
-                        }
+                        TrySearchEnemy();
                     }
                     break;
             }
@@ -198,6 +158,33 @@ namespace MyGame
                     IsRunning=true;                    
                     break;
             }
+        }
+
+        public void TrySearchEnemy()
+        {
+            int chance = _random.Next(0, 100);
+
+            if (chance > 20)
+            {
+                _log.AddLog($" Результат поиска: Враг найден!");
+                _player.Enemy = CreateEnemy();
+                _player.SetEnemy(_player.Enemy);
+            }
+            else
+            {
+                _log.AddLog($" Результат поиска: Никого");
+            }
+        }
+
+        public void BattleActors()
+        {
+            _player.Enemy.TryHit(out var damage);
+
+            _player.TakeDamage(damage);
+
+            _player.TryHit(out damage);
+
+            _player.Enemy?.TakeDamage(damage);
         }
     }
 }

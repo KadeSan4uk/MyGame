@@ -1,8 +1,4 @@
-﻿using System;
-using System.Numerics;
-using static System.Net.Mime.MediaTypeNames;
-using static System.Collections.Specialized.BitVector32;
-
+﻿
 namespace MyGame
 {
     public class Player
@@ -65,6 +61,19 @@ namespace MyGame
             _log.AddLog($" Игрок промахнулся");
         }
 
+        public void TryEscape()
+        {
+            int chance = _random.Next(0, 100);
+            if (chance > 20)
+            {
+                EscapeLuck();
+                Enemy = null;
+            }
+            else
+            {
+                EscapeFalse();
+            }
+        }
         public void EscapeLuck()
         {                   
             _log.AddLog($" Побег удался");
@@ -112,7 +121,7 @@ namespace MyGame
         public void HealthStatus()
         {
             Console.WriteLine($" Игрок уровень:\t {_level}");
-            Console.WriteLine($" \t жизни:\t {_health}\n");
+            Console.WriteLine($" \t жизни:\t {_health}\n\n");
         }
 
         public void StatusPlayer()

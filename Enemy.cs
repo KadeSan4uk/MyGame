@@ -1,5 +1,4 @@
-﻿using System.Text.RegularExpressions;
-
+﻿ 
 namespace MyGame
 {
     public class Enemy
@@ -60,7 +59,7 @@ namespace MyGame
         public void HealthStatus()
         {                 
             Console.WriteLine($"  Враг уровень:\t {_level}");
-            Console.WriteLine($"   \t жизни:\t {_health}\n");                                      
+            Console.WriteLine($"   \t жизни:\t {_health}\n\n");                                      
         }        
     }
 }
