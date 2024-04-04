@@ -1,25 +1,29 @@
-﻿
+﻿using System;
+
 namespace MyGame
 {
-    public class World 
+    public class World
     {
-        private InputPlayer? _inputPlayer;                        
+        private InputPlayer? _inputPlayer;
         private Logger _log;
-        private Player _player;        
-        private Random _random=new();
+        private Player _player;
+        private Random _random = new();
         private int _currentRound = 1;
-        public bool IsRunning {get;set;}
+        public bool IsRunning { get; set; }
 
         public World(Logger log)
         {
             _log = log;
-            _player = CreatePlayer();   
-        }       
+            _player = CreatePlayer();
+        }
 
         public void PrintStatus()
         {
-            _player.StatusPlayer();            
-            _player.Enemy?.HealthStatus();            
+            _player.StatusPlayer();
+             DrawBarsPlayer(_player);
+            _player.HealthStatus();
+             DrawBarsEnemy(_player.Enemy);
+            _player.Enemy?.HealthStatus();
         }
 
         public void PerformGlobalAction()
@@ -53,7 +57,7 @@ namespace MyGame
                 case InputPlayer.PlayerAction.Hit:
                     if (_player.Enemy is not null)
                     {
-                        BattleActors();                                                                  
+                        BattleActors();
                     }
                     break;
                 case InputPlayer.PlayerAction.Escape:
@@ -149,13 +153,13 @@ namespace MyGame
                 case "2":
                     Console.Clear();
                     Console.WriteLine($" Вышли из игры");
-                    IsRunning = true;                    
+                    IsRunning = true;
                     break;
 
                 default:
                     Console.Clear();
                     Console.WriteLine($" Вышли из игры");
-                    IsRunning=true;                    
+                    IsRunning = true;
                     break;
             }
         }
@@ -177,8 +181,8 @@ namespace MyGame
         }
 
         public void BattleActors()
-        {   
-            if(_player.Enemy != null)
+        {
+            if (_player.Enemy != null)
             {
                 _player.Enemy.TryHit(out var damage);
 
@@ -187,34 +191,85 @@ namespace MyGame
                 _player.TryHit(out damage);
 
                 _player.Enemy?.TakeDamage(damage);
-            }               
+            }
         }
 
-        public void DrawBarsActors(int value, int Maxvalue, ConsoleColor color)
+        public void DrawBarsPlayer(Player player)
         {
-            ConsoleColor defaultColor= Console.BackgroundColor;
+            int MaxHealth = 0;
+            int health = 0;
+            player.GiveHealthForBars(ref health, ref MaxHealth);
+            int PartSize = 10;
+            int BarSize = MaxHealth / PartSize;
+            int HealthSize = health / BarSize;
 
-            string bar = "";
+            string HealthStatus = $"{health}\\{MaxHealth}";
 
-            for (int i = 0; i < value; i++)
-            {
-                bar += " ";
-            }
+            int barStartX = 0;
+            int barStartY = Console.CursorTop;
+            int startX = barStartX + (PartSize - HealthStatus.Length) / 2;
 
-            Console.SetCursorPosition(0, Console.CursorTop);
+            Console.SetCursorPosition(startX, barStartY - 1);
+            Console.Write(HealthStatus);
+
+            Console.SetCursorPosition(barStartX, barStartY);
             Console.Write('[');
-            Console.BackgroundColor = color;
-            Console.Write(bar);
-            Console.BackgroundColor=defaultColor;
-
-            bar = "";
-
-            for(int i = value;i < Maxvalue; i++)
+            for (int i = 0; i < PartSize; i++)
             {
-                bar+= " ";
+                if (i < HealthSize)
+                {
+                    Console.BackgroundColor = ConsoleColor.Green;
+                    Console.Write(" ");
+                }
+                else
+                {
+                    Console.BackgroundColor = ConsoleColor.Black;
+                    Console.Write(" ");
+                }
+            }
+            Console.BackgroundColor = ConsoleColor.Black;
+            Console.Write(']');
+        }
+
+        public void DrawBarsEnemy(Enemy? enemy)
+        {
+            if (_player.Enemy is not null)
+            {
+                int MaxHealth = 0;
+                int health = 0;
+                enemy?.GiveHealthForBars(ref health, ref MaxHealth);
+                int PartSize = 10;
+                int BarSize = MaxHealth / PartSize;
+                int HealthSize = health / BarSize;
+
+                string HealthStatus = $"{health}\\{MaxHealth}";
+
+                int barStartX = 0;
+                int barStartY = Console.CursorTop;
+                int startX = barStartX + (PartSize - HealthStatus.Length) / 2;
+
+                Console.SetCursorPosition(startX, barStartY - 1);
+                Console.Write(HealthStatus);
+
+                Console.SetCursorPosition(barStartX, barStartY);
+                Console.Write('[');
+                for (int i = 0; i < PartSize; i++)
+                {
+                    if (i < HealthSize)
+                    {
+                        Console.BackgroundColor = ConsoleColor.Red;
+                        Console.Write(" ");
+                    }
+                    else
+                    {
+                        Console.BackgroundColor = ConsoleColor.Black;
+                        Console.Write(" ");
+                    }
+                }
+                Console.BackgroundColor = ConsoleColor.Black;
+                Console.Write(']');
             }
 
-            Console.Write(bar+']');
         }
     }
 }

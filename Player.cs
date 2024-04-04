@@ -6,14 +6,15 @@ namespace MyGame
         public event Action? FindEnemyEvent;
         public event Action? DiedEventPlayer;
 
-        private const int Health = 400;
-        private const int Damage = 100;
+        private const int Health = 400;        
+        private const int Damage = 50;
         private const int Level = 1;
         private const int Experience = 0;
         private int _maxHealth;
         private int _health;
         private int _damage;
         private int _level;
+        private int _countExperience = 2;
         private int _experience;
         private int _upHealth;
         private int _upDamage;
@@ -49,10 +50,10 @@ namespace MyGame
         {
             int chance = _random.Next(0, 100);
 
-            if (chance > 20)
+            if (chance > 15)
             {
                 damage = _damage;
-                return true;
+                return true;                
             }
 
             _log.AddLog($" Игрок промахнулся");
@@ -78,6 +79,7 @@ namespace MyGame
                 EscapeFalse();
             }
         }
+
         public void EscapeLuck()
         {                   
             _log.AddLog($" Побег удался");
@@ -98,7 +100,7 @@ namespace MyGame
         public void RestorHealthDamage()
         {
             _health = Health + _upHealth;
-            _maxHealth = Health + _upHealth;
+            _maxHealth = _health;
             _damage = Damage + _upDamage;
         }
 
@@ -107,9 +109,10 @@ namespace MyGame
             _log.AddLog($" Игрок получил {experience} опыта");
             _experience += experience;
 
-            if (_experience > 2)
+            if (_experience > _countExperience)
             {
                 LevelUp();
+                _countExperience++;
             }
         }
 
@@ -125,18 +128,20 @@ namespace MyGame
 
         public void HealthStatus()
         {
-            Console.WriteLine($" Игрок уровень:\t {_level}");            
-            Console.WriteLine($" \t жизни:\t {_health}\\{_maxHealth}\n\n");
+            Console.WriteLine($" Игрок уровень: {_level}");            
+            Console.WriteLine($"\n");
         }
 
         public void StatusPlayer()
         {
-            Console.WriteLine(
-                $" Состояние игрока: {(Enemy is not null ? "в бою\n  " : "в покое\n")}");
-
-            HealthStatus();
+            Console.WriteLine($" Состояние игрока: {(Enemy is not null ? "в бою\n\n " : "в покое\n\n")}");            
         }       
 
+        public void GiveHealthForBars(ref int health,ref int MaxHealth)
+        {
+            health = _health;
+            MaxHealth=_maxHealth;            
+        }
         public void SetEnemy(Enemy? enemy)
         {
             Enemy = enemy;

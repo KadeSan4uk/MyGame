@@ -6,9 +6,10 @@ namespace MyGame
         public event Action? DiedEventEnemy;       
 
         private const int Health = 300;
-        private const int Damage = 100;
+        private const int Damage = 50;
         private const int Level = 1;
         private int _health;
+        private int _maxHealth;
         private int _damage;
         private int _level; 
         
@@ -22,6 +23,7 @@ namespace MyGame
         {            
             _log = log;
             _health = Health;
+            _maxHealth = _health;
             _damage = Damage;
             _level = Level;
         }
@@ -59,8 +61,14 @@ namespace MyGame
 
         public void HealthStatus()
         {                 
-            Console.WriteLine($"  Враг уровень:\t {_level}");
-            Console.WriteLine($"   \t жизни:\t {_health}\n\n");                                      
-        }        
+            Console.WriteLine($"  Враг уровень: {_level}");
+            Console.WriteLine($"\n");                                      
+        }
+
+        public void GiveHealthForBars(ref int health, ref int MaxHealt)
+        {
+            health = _health;
+            MaxHealt = _maxHealth;
+        }
     }
 }
