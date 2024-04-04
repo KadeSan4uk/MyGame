@@ -10,6 +10,7 @@ namespace MyGame
         private const int Damage = 100;
         private const int Level = 1;
         private const int Experience = 0;
+        private int _maxHealth;
         private int _health;
         private int _damage;
         private int _level;
@@ -25,6 +26,7 @@ namespace MyGame
         {
             _log = log;
             _health = Health;
+            _maxHealth = Health;
             _damage = Damage;
             _level = Level;
             _experience = Experience;
@@ -33,8 +35,10 @@ namespace MyGame
         public void TakeDamage(int damage)
         {
             _health -= damage;
-
-            _log.AddLog($" Враг нанес {damage} урона");
+            if (damage != 0)
+            {
+                _log.AddLog($" Враг нанес {damage} урона");
+            }
 
             if (_health <= 0)
             {
@@ -94,6 +98,7 @@ namespace MyGame
         public void RestorHealthDamage()
         {
             _health = Health + _upHealth;
+            _maxHealth = Health + _upHealth;
             _damage = Damage + _upDamage;
         }
 
@@ -120,8 +125,8 @@ namespace MyGame
 
         public void HealthStatus()
         {
-            Console.WriteLine($" Игрок уровень:\t {_level}");
-            Console.WriteLine($" \t жизни:\t {_health}\n\n");
+            Console.WriteLine($" Игрок уровень:\t {_level}");            
+            Console.WriteLine($" \t жизни:\t {_health}\\{_maxHealth}\n\n");
         }
 
         public void StatusPlayer()

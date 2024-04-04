@@ -32,6 +32,7 @@ namespace MyGame
 
             if (_isAlive)
             {
+                if(damage != 0)
                 _log.AddLog($" Игрок нанес {damage} урона");
             }
             else

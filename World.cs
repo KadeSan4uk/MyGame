@@ -3,7 +3,7 @@ namespace MyGame
 {
     public class World 
     {
-        private InputPlayer _inputPlayer;                        
+        private InputPlayer? _inputPlayer;                        
         private Logger _log;
         private Player _player;        
         private Random _random=new();
@@ -18,7 +18,7 @@ namespace MyGame
 
         public void PrintStatus()
         {
-            _player.StatusPlayer(); 
+            _player.StatusPlayer();            
             _player.Enemy?.HealthStatus();            
         }
 
@@ -177,14 +177,44 @@ namespace MyGame
         }
 
         public void BattleActors()
+        {   
+            if(_player.Enemy != null)
+            {
+                _player.Enemy.TryHit(out var damage);
+
+                _player.TakeDamage(damage);
+
+                _player.TryHit(out damage);
+
+                _player.Enemy?.TakeDamage(damage);
+            }               
+        }
+
+        public void DrawBarsActors(int value, int Maxvalue, ConsoleColor color)
         {
-            _player.Enemy.TryHit(out var damage);
+            ConsoleColor defaultColor= Console.BackgroundColor;
 
-            _player.TakeDamage(damage);
+            string bar = "";
 
-            _player.TryHit(out damage);
+            for (int i = 0; i < value; i++)
+            {
+                bar += " ";
+            }
 
-            _player.Enemy?.TakeDamage(damage);
+            Console.SetCursorPosition(0, Console.CursorTop);
+            Console.Write('[');
+            Console.BackgroundColor = color;
+            Console.Write(bar);
+            Console.BackgroundColor=defaultColor;
+
+            bar = "";
+
+            for(int i = value;i < Maxvalue; i++)
+            {
+                bar+= " ";
+            }
+
+            Console.Write(bar+']');
         }
     }
 }
