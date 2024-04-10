@@ -11,6 +11,7 @@ namespace MyGame
         {           
             _logger = new Logger(Console.WriteLine);
             _world = new World(_logger);
+            Console.CursorVisible = false;
 
             while (!_world.IsRunning)
             {

@@ -1,7 +1,8 @@
-﻿
+﻿using System.Drawing;
+
 namespace MyGame
 {
-    public class Player
+    public class Player:IBarDrawable
     {
         public event Action? FindEnemyEvent;
         public event Action? DiedEventPlayer;

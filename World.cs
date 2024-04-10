@@ -20,9 +20,12 @@ namespace MyGame
         public void PrintStatus()
         {
             _player.StatusPlayer();
-             DrawBarsPlayer(_player);
+             DrawBars(_player, ConsoleColor.Green);
             _player.HealthStatus();
-             DrawBarsEnemy(_player.Enemy);
+            if(_player.Enemy is not null)
+            {
+                DrawBars(_player.Enemy, ConsoleColor.Red);
+            }
             _player.Enemy?.HealthStatus();
         }
 
@@ -194,11 +197,11 @@ namespace MyGame
             }
         }
 
-        public void DrawBarsPlayer(Player player)
+        public void DrawBars(IBarDrawable barDrawable, ConsoleColor barColor)
         {
             int MaxHealth = 0;
-            int health = 0;
-            player.GiveHealthForBars(ref health, ref MaxHealth);
+            int health = 0;              
+            barDrawable.GiveHealthForBars(ref health, ref MaxHealth);            
             int PartSize = 10;
             int BarSize = MaxHealth / PartSize;
             int HealthSize = health / BarSize;
@@ -218,7 +221,7 @@ namespace MyGame
             {
                 if (i < HealthSize)
                 {
-                    Console.BackgroundColor = ConsoleColor.Green;
+                    Console.BackgroundColor = barColor;
                     Console.Write(" ");
                 }
                 else
@@ -229,47 +232,6 @@ namespace MyGame
             }
             Console.BackgroundColor = ConsoleColor.Black;
             Console.Write(']');
-        }
-
-        public void DrawBarsEnemy(Enemy? enemy)
-        {
-            if (_player.Enemy is not null)
-            {
-                int MaxHealth = 0;
-                int health = 0;
-                enemy?.GiveHealthForBars(ref health, ref MaxHealth);
-                int PartSize = 10;
-                int BarSize = MaxHealth / PartSize;
-                int HealthSize = health / BarSize;
-
-                string HealthStatus = $"{health}\\{MaxHealth}";
-
-                int barStartX = 0;
-                int barStartY = Console.CursorTop;
-                int startX = barStartX + (PartSize - HealthStatus.Length) / 2;
-
-                Console.SetCursorPosition(startX, barStartY - 1);
-                Console.Write(HealthStatus);
-
-                Console.SetCursorPosition(barStartX, barStartY);
-                Console.Write('[');
-                for (int i = 0; i < PartSize; i++)
-                {
-                    if (i < HealthSize)
-                    {
-                        Console.BackgroundColor = ConsoleColor.Red;
-                        Console.Write(" ");
-                    }
-                    else
-                    {
-                        Console.BackgroundColor = ConsoleColor.Black;
-                        Console.Write(" ");
-                    }
-                }
-                Console.BackgroundColor = ConsoleColor.Black;
-                Console.Write(']');
-            }
-
-        }
+        }      
     }
 }

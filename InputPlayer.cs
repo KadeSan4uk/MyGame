@@ -46,7 +46,7 @@ namespace MyGame
                 }
                 else
                 {
-                    if (!InputIsCorrect || action < 1 || action > 3)
+                    if (!InputIsCorrect || action < 1 || action > 2)
                     {
                         Console.SetCursorPosition(0, Console.CursorTop - 5);
                         Console.WriteLine(" Неверный ввод. Повторите действие.");

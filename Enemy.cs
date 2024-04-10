@@ -1,13 +1,14 @@
-﻿ 
+﻿using System.Drawing;
+
 namespace MyGame
 {
-    public class Enemy
+    public class Enemy:IBarDrawable
     {
         public event Action? DiedEventEnemy;       
 
         private const int Health = 300;
         private const int Damage = 50;
-        private const int Level = 1;
+        private const int Level = 1;            
         private int _health;
         private int _maxHealth;
         private int _damage;
