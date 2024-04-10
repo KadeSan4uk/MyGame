@@ -197,11 +197,11 @@ namespace MyGame
             }
         }
 
-        public void DrawBars(IBarDrawable barDrawable, ConsoleColor barColor)
+        public void DrawBars(IBarDraw barDraw, ConsoleColor barColor)
         {
             int MaxHealth = 0;
             int health = 0;              
-            barDrawable.GiveHealthForBars(ref health, ref MaxHealth);            
+            barDraw.GiveHealthForBars(ref health, ref MaxHealth);            
             int PartSize = 10;
             int BarSize = MaxHealth / PartSize;
             int HealthSize = health / BarSize;

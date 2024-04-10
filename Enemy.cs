@@ -2,7 +2,7 @@
 
 namespace MyGame
 {
-    public class Enemy:IBarDrawable
+    public class Enemy:IBarDraw
     {
         public event Action? DiedEventEnemy;       
 
