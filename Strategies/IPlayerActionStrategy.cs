@@ -6,8 +6,8 @@ using System.Collections.Generic;
 
 namespace MyGame
 {
-    public interface IHitStrategy
-    {
-
+    public interface IPlayerActionStrategy
+    {              
+        InputPlayer.PlayerAction GetPlayerAction(Player player);       
     }
 }
