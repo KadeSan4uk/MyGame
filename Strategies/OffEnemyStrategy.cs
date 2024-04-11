@@ -18,13 +18,13 @@ namespace MyGame
                 Console.SetCursorPosition(0, Console.CursorTop);
 
                 Console.WriteLine("Возможное действие:");
-                Console.WriteLine("3) = Искать врага");
+                Console.WriteLine("1) = Искать врага");
 
                 string? input = Console.ReadLine();
 
                 inputIsCorrect = int.TryParse(input, out action);
 
-                if (!inputIsCorrect || action != 3)
+                if (!inputIsCorrect || action != 1)
                 {
                     Console.SetCursorPosition(0, Console.CursorTop - 4);
                     Console.WriteLine("Неверный ввод. Повторите действие.");
@@ -32,7 +32,7 @@ namespace MyGame
                 }
             } while (!inputIsCorrect);
 
-            return (InputPlayer.PlayerAction) action;
+            return InputPlayer.PlayerAction.Search;
         }
     }
 }
