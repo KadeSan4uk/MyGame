@@ -58,22 +58,16 @@ namespace MyGame
             switch (action)
             {
                 case InputPlayer.PlayerAction.Hit:
-                    if (_player.Enemy is not null)
-                    {
-                        BattleActors();
-                    }
+                    if (_player.Enemy is not null)                    
+                        BattleActors();                    
                     break;
                 case InputPlayer.PlayerAction.Escape:
-                    if (_player.Enemy is not null)
-                    {
-                        _player.TryEscape();
-                    }
+                    if (_player.Enemy is not null)                    
+                        _player.TryEscape();                    
                     break;
                 case InputPlayer.PlayerAction.Search:
-                    if (_player.Enemy is null)
-                    {
-                        TrySearchEnemy();
-                    }
+                    if (_player.Enemy is null)                    
+                        TrySearchEnemy();                    
                     break;
             }
         }

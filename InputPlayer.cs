@@ -3,15 +3,16 @@ namespace MyGame
 {
     public class InputPlayer
     {
-        private IPlayerActionStrategy? _strategy;
+        private IPlayerInputActionStrategy? _strategy;
         public enum PlayerAction
         {
-            Hit = 1,
+            None,
+            Hit,
             Escape,
             Search
         }
 
-        public void SetStrategy(IPlayerActionStrategy strategy)
+        public void SetStrategy(IPlayerInputActionStrategy strategy)
         {
             _strategy=strategy;
         }

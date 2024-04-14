@@ -6,7 +6,7 @@ using System.Collections.Generic;
 
 namespace MyGame
 {
-    public class OffEnemyStrategy:IPlayerActionStrategy
+    public class OffEnemyStrategy:IPlayerInputActionStrategy
     {
         public InputPlayer.PlayerAction GetPlayerAction(Player player)
         {
