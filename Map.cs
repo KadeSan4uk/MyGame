@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 
-namespace Game2Test
+namespace MyGame
 {
     public class Map
     {
@@ -26,6 +26,12 @@ namespace Game2Test
         private static char[,] ReadMap(string path)
         {
             string[] file = File.ReadAllLines("map1.txt");
+
+            //using (var openFileStrim = new StreamReader(File.OpenRead("")))
+            //{
+            //    openFileStrim.ReadToEnd("");
+            //}          
+            
 
             char[,] map = new char[GetMaxLengthOfLine(file), file.Length];
 
