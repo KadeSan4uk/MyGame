@@ -1,13 +1,13 @@
 ﻿using System.Drawing;
 
-namespace MyGame
+namespace MyGame.CoreGame
 {
-    public class Player:IBarDraw
+    public class Player : IBarDraw
     {
         public event Action? FindEnemyEvent;
         public event Action? DiedEventPlayer;
 
-        private const int Health = 400;        
+        private const int Health = 400;
         private const int Damage = 50;
         private const int Level = 1;
         private const int Experience = 0;
@@ -32,7 +32,7 @@ namespace MyGame
             _damage = Damage;
             _level = Level;
             _experience = Experience;
-        }        
+        }
 
         public void TakeDamage(int damage)
         {
@@ -47,14 +47,14 @@ namespace MyGame
                 DiedEventPlayer?.Invoke();
             }
         }
-        public  bool TryHit(out int damage)
+        public bool TryHit(out int damage)
         {
             int chance = _random.Next(0, 100);
 
             if (chance > 15)
             {
                 damage = _damage;
-                return true;                
+                return true;
             }
 
             _log.AddLog($" Игрок промахнулся");
@@ -82,9 +82,9 @@ namespace MyGame
         }
 
         public void EscapeLuck()
-        {                   
+        {
             _log.AddLog($" Побег удался");
-            RestorHealthDamage();            
+            RestorHealthDamage();
         }
 
         public void EscapeFalse()
@@ -129,19 +129,19 @@ namespace MyGame
 
         public void HealthStatus()
         {
-            Console.WriteLine($" Игрок уровень: {_level}");            
+            Console.WriteLine($" Игрок уровень: {_level}");
             Console.WriteLine($"\n");
         }
 
         public void StatusPlayer()
         {
-            Console.WriteLine($" Состояние игрока: {(Enemy is not null ? "в бою\n\n " : "в покое\n\n")}");            
-        }       
+            Console.WriteLine($" Состояние игрока: {(Enemy is not null ? "в бою\n\n " : "в покое\n\n")}");
+        }
 
-        public void GiveHealthForBars(ref int health,ref int MaxHealth)
+        public void GiveHealthForBars(ref int health, ref int MaxHealth)
         {
             health = _health;
-            MaxHealth=_maxHealth;            
+            MaxHealth = _maxHealth;
         }
         public void SetEnemy(Enemy? enemy)
         {

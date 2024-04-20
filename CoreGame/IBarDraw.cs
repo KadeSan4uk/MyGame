@@ -5,11 +5,11 @@ using System.Drawing;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 
-namespace MyGame
+namespace MyGame.CoreGame
 {
     public interface IBarDraw
     {
         void GiveHealthForBars(ref int health, ref int MaxHealth);
-        
+
     }
 }

@@ -1,5 +1,4 @@
-﻿
-namespace MyGame
+﻿namespace MyGame.CoreGame
 {
     public class Logger
     {

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 
-namespace MyGame
+namespace MyGame.CoreGame
 {
     public class Map
     {
@@ -32,7 +32,7 @@ namespace MyGame
         {
             string mapPath = @"D:\CsharpCourse\MyGame\bin\Debug\net8.0\map1.txt";
             List<string> lines = new List<string>();
-            
+
             using (StreamReader reader = new StreamReader(mapPath))
             {
                 string line;
@@ -41,12 +41,12 @@ namespace MyGame
                     lines.Add(line);
                 }
             }
-            
+
             int maxWidth = GetMaxLengthOfLine(lines.ToArray());
             char[,] map = new char[maxWidth, lines.Count];
 
             Random random = new Random();
-            
+
             for (int y = 0; y < lines.Count; y++)
             {
                 string currentLine = lines[y];

@@ -1,5 +1,4 @@
-﻿
-namespace MyGame
+﻿namespace MyGame.CoreGame
 {
     public class InputPlayer
     {
@@ -14,18 +13,18 @@ namespace MyGame
 
         public void SetStrategy(IPlayerInputActionStrategy strategy)
         {
-            _strategy=strategy;
+            _strategy = strategy;
         }
         public PlayerAction GetPlayerAction(Player _player)
         {
 
             if (_player.Enemy is not null)
             {
-                _strategy = new OnEnemyStrategy();
+                _strategy = new OnEnemyInputStrategy();
             }
             else
             {
-                _strategy = new OffEnemyStrategy();
+                _strategy = new OffEnemyInputStrategy();
             }
 
             return _strategy.GetPlayerAction(_player);

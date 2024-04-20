@@ -1,14 +1,14 @@
 ﻿using System.Drawing;
 
-namespace MyGame
+namespace MyGame.CoreGame
 {
-    public class Enemy:IBarDraw
+    public class Enemy : IBarDraw
     {
-        public event Action? DiedEventEnemy;       
+        public event Action? DiedEventEnemy;
 
         private const int Health = 300;
         private const int Damage = 50;
-        private const int Level = 1;            
+        private const int Level = 1;
         private int _health;
         private int _maxHealth;
         private int _damage;
@@ -16,7 +16,7 @@ namespace MyGame
 
         private bool _isAlive => _health > 0;
         public int DieExperience => 1;
-        public string Name {  get; set; }
+        public string Name { get; set; }
 
 
         private Logger _log;
@@ -24,7 +24,7 @@ namespace MyGame
 
         public Enemy(Logger log)
         {
-             Name = SetName().ToString();
+            Name = SetName().ToString();
             _log = log;
             _health = Health;
             _maxHealth = _health;
@@ -38,8 +38,8 @@ namespace MyGame
 
             if (_isAlive)
             {
-                if(damage != 0)
-                _log.AddLog($" Игрок нанес {damage} урона");
+                if (damage != 0)
+                    _log.AddLog($" Игрок нанес {damage} урона");
             }
             else
             {
@@ -64,9 +64,9 @@ namespace MyGame
         }
 
         public void HealthStatus()
-        {                 
+        {
             Console.WriteLine($"  {Name} уровень: {_level}");
-            Console.WriteLine($"\n");                                      
+            Console.WriteLine($"\n");
         }
 
         public void GiveHealthForBars(ref int health, ref int MaxHealt)
@@ -75,7 +75,7 @@ namespace MyGame
             MaxHealt = _maxHealth;
         }
 
-        public enum NameEnemy 
+        public enum NameEnemy
         {
             Гримгор,
             Злоборог,
@@ -184,7 +184,7 @@ namespace MyGame
             Random random = new Random();
             int index = random.Next(Enum.GetNames(typeof(NameEnemy)).Length);
 
-            return (NameEnemy) index;
+            return (NameEnemy)index;
         }
 
 

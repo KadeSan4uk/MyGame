@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Linq;
 using System.Text;
+using MyGame.CoreGame;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 
 namespace MyGame
 {
-    public class OffEnemyStrategy:IPlayerInputActionStrategy
+    public class OnEnemyInputStrategy:IPlayerInputActionStrategy
     {
         public InputPlayer.PlayerAction GetPlayerAction(Player player)
         {
@@ -17,22 +18,24 @@ namespace MyGame
             {
                 Console.SetCursorPosition(0, Console.CursorTop);
 
-                Console.WriteLine("Возможное действие:");
-                Console.WriteLine("1) = Искать врага");
+                Console.WriteLine("Возможные действия:");
+                Console.WriteLine("1) = Атаковать");
+                Console.WriteLine("2) = Сбежать");
 
                 string? input = Console.ReadLine();
 
                 inputIsCorrect = int.TryParse(input, out action);
 
-                if (!inputIsCorrect || action != 1)
+                if (!inputIsCorrect || action < 1 || action > 2)
                 {
-                    Console.SetCursorPosition(0, Console.CursorTop - 4);
+                    Console.SetCursorPosition(0, Console.CursorTop - 5);
                     Console.WriteLine("Неверный ввод. Повторите действие.");
                     inputIsCorrect = false;
                 }
             } while (!inputIsCorrect);
 
-            return InputPlayer.PlayerAction.Search;
+            return (InputPlayer.PlayerAction) action;
         }
     }
 }
+

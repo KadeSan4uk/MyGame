@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace MyGame
+namespace MyGame.CoreGame
 {
     public class World
     {
@@ -20,9 +20,9 @@ namespace MyGame
         public void PrintStatus()
         {
             _player.StatusPlayer();
-             DrawBars(_player, ConsoleColor.Green);
+            DrawBars(_player, ConsoleColor.Green);
             _player.HealthStatus();
-            if(_player.Enemy is not null)
+            if (_player.Enemy is not null)
             {
                 DrawBars(_player.Enemy, ConsoleColor.Red);
             }
@@ -58,16 +58,16 @@ namespace MyGame
             switch (action)
             {
                 case InputPlayer.PlayerAction.Hit:
-                    if (_player.Enemy is not null)                    
-                        BattleActors();                    
+                    if (_player.Enemy is not null)
+                        BattleActors();
                     break;
                 case InputPlayer.PlayerAction.Escape:
-                    if (_player.Enemy is not null)                    
-                        _player.TryEscape();                    
+                    if (_player.Enemy is not null)
+                        _player.TryEscape();
                     break;
                 case InputPlayer.PlayerAction.Search:
-                    if (_player.Enemy is null)                    
-                        TrySearchEnemy();                    
+                    if (_player.Enemy is null)
+                        TrySearchEnemy();
                     break;
             }
         }
@@ -194,8 +194,8 @@ namespace MyGame
         public void DrawBars(IBarDraw barDraw, ConsoleColor barColor)
         {
             int MaxHealth = 0;
-            int health = 0;              
-            barDraw.GiveHealthForBars(ref health, ref MaxHealth);            
+            int health = 0;
+            barDraw.GiveHealthForBars(ref health, ref MaxHealth);
             int PartSize = 10;
             int BarSize = MaxHealth / PartSize;
             int HealthSize = health / BarSize;
@@ -226,6 +226,6 @@ namespace MyGame
             }
             Console.BackgroundColor = ConsoleColor.Black;
             Console.Write(']');
-        }      
+        }
     }
 }

@@ -1,14 +1,13 @@
-﻿
-namespace MyGame
+﻿namespace MyGame.CoreGame
 {
     public class Program
     {
         private static World? _world;
         private static Logger? _logger;
-        
+
 
         public static void Main(string[] args)
-        {           
+        {
             _logger = new Logger(Console.WriteLine);
             _world = new World(_logger);
             Console.CursorVisible = false;
