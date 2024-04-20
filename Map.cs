@@ -5,7 +5,7 @@ namespace MyGame
 {
     public class Map
     {
-        static void Chtonibud()
+        public void DrawMap()
         {
             char[,] map = ReadMap("map1.txt");
             Console.CursorVisible = false;
@@ -18,6 +18,11 @@ namespace MyGame
                 DrawMap(map);
                 DrawPlayer(playerX, playerY);
 
+
+                Console.SetCursorPosition(map.GetLength(0) + 2, 0);
+                Console.ForegroundColor = ConsoleColor.White;
+                Console.Write($"Player Position: ({playerX}, {playerY})");
+
                 ConsoleKeyInfo pressedKey = Console.ReadKey(true);
                 HandleInput(pressedKey, ref playerX, ref playerY, map);
             }
@@ -25,44 +30,41 @@ namespace MyGame
 
         private static char[,] ReadMap(string path)
         {
-            string[] file = File.ReadAllLines("map1.txt");
-
-            //using (var openFileStrim = new StreamReader(File.OpenRead("")))
-            //{
-            //    openFileStrim.ReadToEnd("");
-            //}          
+            string mapPath = @"D:\CsharpCourse\MyGame\bin\Debug\net8.0\map1.txt";
+            List<string> lines = new List<string>();
             
-
-            char[,] map = new char[GetMaxLengthOfLine(file), file.Length];
+            using (StreamReader reader = new StreamReader(mapPath))
+            {
+                string line;
+                while ((line = reader.ReadLine()) != null)
+                {
+                    lines.Add(line);
+                }
+            }
+            
+            int maxWidth = GetMaxLengthOfLine(lines.ToArray());
+            char[,] map = new char[maxWidth, lines.Count];
 
             Random random = new Random();
-
-            for (int y = 0; y < file.Length; y++)
+            
+            for (int y = 0; y < lines.Count; y++)
             {
-                for (int x = 0; x < file[y].Length; x++)
+                string currentLine = lines[y];
+                for (int x = 0; x < currentLine.Length; x++)
                 {
-                    if (file[y][x] == '#')
+                    if (currentLine[x] == '#')
                     {
                         map[x, y] = '#';
                     }
-                    else if (file[y][x] == '@')
+                    else if (currentLine[x] == '@')
                     {
                         map[x, y] = '@';
                     }
                     else
                     {
-
                         if (!HasNeighborO(map, x, y))
                         {
-
-                            if (random.Next(10) < 2)
-                            {
-                                map[x, y] = 'm';
-                            }
-                            else
-                            {
-                                map[x, y] = ' ';
-                            }
+                            map[x, y] = random.Next(10) < 2 ? 'm' : ' ';
                         }
                         else
                         {
