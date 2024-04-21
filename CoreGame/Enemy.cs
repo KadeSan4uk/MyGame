@@ -187,10 +187,5 @@ namespace MyGame.CoreGame
             return (NameEnemy)index;
         }
 
-
-
-
-
-
     }
 }
