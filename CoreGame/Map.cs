@@ -7,7 +7,8 @@ namespace MyGame.CoreGame
     {
         public void DrawMap()
         {
-            char[,] map = ReadMap("map1.txt");
+            string path = @"D:\CsharpCourse\MyGame\bin\Debug\net8.0\map1.txt";
+            char[,] map = ReadMap(path);
             Console.CursorVisible = false;
 
             int playerX = 1;
@@ -30,16 +31,21 @@ namespace MyGame.CoreGame
 
         private static char[,] ReadMap(string path)
         {
-            string mapPath = @"D:\CsharpCourse\MyGame\bin\Debug\net8.0\map1.txt";
             List<string> lines = new List<string>();
 
-            using (StreamReader reader = new StreamReader(mapPath))
+            try
             {
-                string line;
+                using StreamReader reader = new StreamReader(path);
+                string? line;
                 while ((line = reader.ReadLine()) != null)
                 {
                     lines.Add(line);
                 }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Не удалось прочитать карту: " + e.Message);
+                return new char[0, 0];
             }
 
             int maxWidth = GetMaxLengthOfLine(lines.ToArray());

@@ -1,4 +1,5 @@
 ﻿using System.Drawing;
+using MyGame.ActionStrategies;
 
 namespace MyGame.CoreGame
 {
@@ -65,7 +66,7 @@ namespace MyGame.CoreGame
         public void Miss()
         {
             _log.AddLog($" Игрок промахнулся");
-        }
+        }                
 
         public void TryEscape()
         {
