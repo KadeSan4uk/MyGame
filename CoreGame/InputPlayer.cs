@@ -10,11 +10,7 @@
             Escape,
             Search
         }
-
-        public void SetStrategy(IPlayerInputActionStrategy strategy)
-        {
-            _strategy = strategy;
-        }
+       
         public PlayerAction GetPlayerAction(Player _player)
         {
 
